@@ -1,19 +1,12 @@
-import type { Metadata } from "next";
+"use client";
 import { Inter } from "next/font/google";
 import "@/styles/globals.css";
-import {
-  title,
-  description,
-  favicon,
-} from "@/components/common/shared-metadata";
+import { store } from "@/store/store";
+import { Provider } from "react-redux";
 
-const inter = Inter({ subsets: ["latin"] });
-
-export const metadata: Metadata = {
-  title: "MindGlow",
-  description: description,
-  icons: favicon,
-};
+const inter = Inter({
+  subsets: ["latin"],
+});
 
 export default function RootLayout({
   children,
@@ -22,7 +15,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={`${inter.className} bg-white dark:bg-black`}>
+        <Provider store={store}>{children}</Provider>
+      </body>
     </html>
   );
 }
