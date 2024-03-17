@@ -8,7 +8,17 @@ module.exports = {
     "./src/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
-    extend: {},
+    colors: {
+      green: "#12463A",
+      yellow: "#FDBA51",
+      "light-yellow": "#F6DAAA",
+      pink: "#D05A68",
+      "light-green": "#8BB25F",
+      black: "#101418",
+      gray: "#9B9B9B",
+      white: "#EEEEEE",
+    },
   },
   plugins: ["prettier-plugin-tailwindcss"],
+  darkMode: "selector",
 };
