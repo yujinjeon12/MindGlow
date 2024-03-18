@@ -1,6 +1,6 @@
 import React from "react";
 
-const Divider = () => {
+const Divider: React.FC = () => {
   return <div>Divider</div>;
 };
 

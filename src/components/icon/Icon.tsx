@@ -1,6 +1,6 @@
 import React from "react";
 
-const Icon = () => {
+const Icon: React.FC = () => {
   return <div>Icon</div>;
 };
 

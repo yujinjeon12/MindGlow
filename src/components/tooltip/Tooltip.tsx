@@ -1,6 +1,6 @@
 import React from "react";
 
-const Tooltip = () => {
+const Tooltip: React.FC = () => {
   return <div>Tooltip</div>;
 };
 

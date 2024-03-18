@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   icons: favicon,
 };
 
-const Home = () => {
+const Home: React.FC = () => {
   return (
     <>
       <div className="container mx-auto md:max-w-2xl lg:max-w-3xl">
