@@ -6,6 +6,7 @@ import {
   description,
   favicon,
 } from "@/components/common/shared-metadata";
+import InnerHeader from "@/components/header/InnerHeader";
 
 export const metadata: Metadata = {
   title: title,
@@ -16,8 +17,11 @@ export const metadata: Metadata = {
 const Home: React.FC = () => {
   return (
     <>
-      <div className="container mx-auto md:max-w-2xl lg:max-w-3xl">
-        <Header />
+      <div className="sticky top-0 bg-white dark:bg-black">
+        <div className="container mx-auto text-center max-w-sm md:max-w-3xl lg:max-w-4xl">
+          <Header />
+        </div>
+        <InnerHeader />
       </div>
     </>
   );
