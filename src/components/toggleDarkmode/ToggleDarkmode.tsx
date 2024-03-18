@@ -14,7 +14,7 @@ const ToggleDarkmode = () => {
   return (
     <>
       <button
-        className="inline-block p-2 rounded-md bg-transparent align-middle"
+        className="inline-block p-2 rounded-full bg-transparent align-middle hover:bg-light-gray dark:hover:bg-dark-gray"
         onClick={() => handleDarkMode()}
       >
         {darkMode ? (

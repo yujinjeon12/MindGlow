@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 const Home = () => {
   return (
     <>
-      <div className="container mx-auto md:max-w-2xl">
+      <div className="container mx-auto md:max-w-2xl lg:max-w-3xl">
         <Header />
       </div>
     </>
