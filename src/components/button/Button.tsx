@@ -9,7 +9,7 @@ const Button: React.FC<ButtonProps> = ({
 }) => {
   return (
     <button
-      className={`rounded-sm bg-${bgColor} text-${textColor} font-bold ${option}`}
+      className={`rounded-sm ${bgColor} ${textColor} font-bold ${option}`}
     >
       {value}
     </button>

@@ -18,16 +18,16 @@ const Header: React.FC = () => {
         <ToggleDarkmode />
         <Link href="/login">
           <Button
-            bgColor="green"
-            textColor="white"
+            bgColor="bg-green"
+            textColor="text-white"
             value="글쓰기"
             option="ml-2 md:ml-8 px-2 py-1 text-sm md:text-base"
           />
         </Link>
         <Link href="/login">
           <Button
-            bgColor="white"
-            textColor="black"
+            bgColor="bg-white"
+            textColor="text-black"
             value="로그인"
             option="ml-2 md:ml-4 border border-gray dark:border-white px-2 py-1 text-sm md:text-base"
           />
