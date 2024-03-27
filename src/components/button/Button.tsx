@@ -6,10 +6,12 @@ const Button: React.FC<ButtonProps> = ({
   textColor,
   value,
   option,
+  onClick,
 }) => {
   return (
     <button
       className={`rounded-sm ${bgColor} ${textColor} font-bold ${option}`}
+      onClick={onClick}
     >
       {value}
     </button>
