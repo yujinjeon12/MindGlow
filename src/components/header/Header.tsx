@@ -3,14 +3,11 @@ import React, { useEffect } from "react";
 import Logo from "../logo/Logo";
 import ToggleDarkmode from "../toggleDarkmode/ToggleDarkmode";
 import Button from "../button/Button";
-import Link from "next/link";
 import { signIn, signOut } from "next-auth/react";
-import { HeaderProps } from "@/types/types";
+import { useSession } from "next-auth/react";
 
-const Header: React.FC<HeaderProps> = ({ session }: HeaderProps) => {
-  useEffect(() => {
-    console.log("session", session);
-  }, [session]);
+const Header: React.FC = () => {
+  const { data: session } = useSession();
 
   return (
     <>
@@ -32,7 +29,7 @@ const Header: React.FC<HeaderProps> = ({ session }: HeaderProps) => {
         />
         {
           // 로그인 상태일 때
-          session ? (
+          session && session?.user ? (
             <>
               <Button
                 bgColor="bg-white"
