@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   icons: favicon,
 };
 
-const Home: React.FC = async () => {
+const Home = async () => {
   const session = await auth();
 
   return (

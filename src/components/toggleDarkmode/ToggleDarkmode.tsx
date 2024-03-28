@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { toggleDarkMode } from "@/store/darkmodeSlice";
 import { RootState } from "@/store/store";
 
-const ToggleDarkmode: React.FC = () => {
+const ToggleDarkmode = () => {
   const darkMode = useSelector((state: RootState) => state.darkMode.value);
   const dispatch = useDispatch();
   const handleDarkMode = () => {

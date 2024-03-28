@@ -2,7 +2,7 @@ import React from "react";
 import Image from "next/image";
 import { APP_NAME, LOGO_PATH } from "@/constants/path";
 
-const Logo: React.FC = () => {
+const Logo = () => {
   return (
     <>
       <Image

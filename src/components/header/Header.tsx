@@ -6,7 +6,7 @@ import Button from "../button/Button";
 import { signIn, signOut } from "next-auth/react";
 import { useSession } from "next-auth/react";
 
-const Header: React.FC = () => {
+const Header = () => {
   const { data: session } = useSession();
 
   return (

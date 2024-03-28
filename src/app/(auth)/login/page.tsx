@@ -2,7 +2,7 @@
 import React from "react";
 import { useInput } from "@/hooks/useInput";
 
-const Login: React.FC = () => {
+const Login = () => {
   const { value, onChangeValue } = useInput("");
   return (
     <input

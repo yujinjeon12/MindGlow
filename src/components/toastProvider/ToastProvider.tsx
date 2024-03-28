@@ -1,6 +1,6 @@
 import React from "react";
 
-const ToastProvider: React.FC = () => {
+const ToastProvider = () => {
   return <div>ToastProvider</div>;
 };
 
