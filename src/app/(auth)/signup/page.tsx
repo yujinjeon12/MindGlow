@@ -6,9 +6,10 @@ import { useRouter } from "next/navigation";
 import Button from "@/components/button/Button";
 import Link from "next/link";
 
-const Login = () => {
+const Signup = () => {
   const id = useInput("");
   const password = useInput("");
+  const passwordCheck = useInput("");
   const [message, setMessage] = useState("");
   const router = useRouter();
 
@@ -29,7 +30,7 @@ const Login = () => {
   return (
     <>
       <div className="flex flex-wrap px-4 md:px-8">
-        <h1 className="w-full text-2xl font-bold mb-10">로그인</h1>
+        <h1 className="w-full text-2xl font-bold mb-10">회원가입</h1>
         <form
           className="w-full"
           onSubmit={onSubmit}
@@ -41,16 +42,22 @@ const Login = () => {
             onChange={id.onChangeValue}
           />
           <input
-            className="w-full border-solid border-2  border-light-gray p-2"
+            className="w-full border-solid border-2  border-light-gray p-2 mb-2"
             placeholder="비밀번호"
             value={password.value}
             onChange={password.onChangeValue}
+          />
+          <input
+            className="w-full border-solid border-2  border-light-gray p-2"
+            placeholder="비밀번호확인"
+            value={passwordCheck.value}
+            onChange={passwordCheck.onChangeValue}
           />
           <p className="w-full text-sm text-pink my-2">{message}</p>
           <Button
             bgColor="bg-dark-gray"
             textColor="text-white"
-            value="로그인"
+            value="회원가입"
             option="w-full px-2 py-1 text-sm md:text-base"
             onClick={() => console.log("login")}
           />
@@ -58,12 +65,10 @@ const Login = () => {
         <Link
           href="/signup"
           className="w-full"
-        >
-          <p className="mt-4 underline">가입하기</p>
-        </Link>
+        ></Link>
       </div>
     </>
   );
 };
 
-export default Login;
+export default Signup;

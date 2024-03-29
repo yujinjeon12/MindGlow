@@ -45,7 +45,7 @@ const Header = () => {
               textColor="text-black"
               value="로그인"
               option="ml-2 md:ml-4 border border-gray dark:border-white px-2 py-1 text-sm md:text-base"
-              onClick={() => signIn("google")}
+              onClick={() => signIn()}
             />
           )
         }

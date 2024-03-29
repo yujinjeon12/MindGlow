@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import React from "react";
-import Header from "../../components/header/Header";
+import Header from "@/components/header/Header";
+
 import {
   title,
   description,
@@ -23,7 +24,6 @@ const Home = async () => {
       <div className="sticky top-0 bg-white dark:bg-black">
         <div className="container mx-auto text-center max-w-sm md:max-w-3xl lg:max-w-4xl">
           <Header />
-          <p>Hello {session?.user?.name}</p>
         </div>
         <InnerHeader />
       </div>
