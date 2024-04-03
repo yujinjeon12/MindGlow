@@ -7,5 +7,5 @@ export type ButtonProps = {
   textColor: string;
   value: string;
   option: string;
-  onClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
 };

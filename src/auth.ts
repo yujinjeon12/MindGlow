@@ -1,10 +1,8 @@
 import NextAuth from "next-auth";
-import { PrismaClient } from "@prisma/client";
+import prisma from "./client";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import Google from "@auth/core/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
-
-const prisma = new PrismaClient();
 
 export const {
   handlers: { GET, POST },
@@ -16,29 +14,31 @@ export const {
   },
   providers: [
     CredentialsProvider({
-      credentials: {
-        id: { label: "id", type: "text" },
-        password: { label: "Password", type: "password" },
-      },
       async authorize(credentials) {
-        const authResponse = await fetch("/api/login", {
-          method: "POST",
-          credentials: "include",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(credentials),
-        });
-
-        if (!authResponse.ok) {
+        const authResponse = await fetch(
+          `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/login`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              email: credentials.email,
+              password: credentials.password,
+            }),
+          }
+        );
+        const result = await authResponse.json();
+        if (result.user) {
+          return result.user;
+        } else {
           return null;
         }
-
-        const user = await authResponse.json();
-
-        return user;
       },
     }),
     Google,
   ],
+  session: {
+    strategy: "jwt",
+  },
 });

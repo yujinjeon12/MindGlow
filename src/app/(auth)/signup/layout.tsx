@@ -10,15 +10,10 @@ export const metadata = {
   description: description,
   icons: favicon,
 };
-
 export default function SignupLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <section className="flex justify-center items-center h-full flex-wrap">
-      {children}
-    </section>
-  );
+  return <>{children}</>;
 }
