@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "@/styles/globals.css";
 import { store } from "@/store/store";
 import { Provider } from "react-redux";
+import { SessionProvider } from "next-auth/react";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -14,9 +15,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html>
       <body className={`${inter.className} bg-white dark:bg-black`}>
-        <Provider store={store}>{children}</Provider>
+        <SessionProvider>
+          <Provider store={store}>{children}</Provider>
+        </SessionProvider>
       </body>
     </html>
   );

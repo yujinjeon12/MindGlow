@@ -6,12 +6,11 @@ import {
 import "@/styles/globals.css";
 
 export const metadata = {
-  title: "로그인",
+  title: "회원가입",
   description: description,
   icons: favicon,
 };
-
-export default function LoginLayout({
+export default function SignupLayout({
   children,
 }: {
   children: React.ReactNode;

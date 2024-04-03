@@ -1,6 +1,6 @@
 import React from "react";
 
-const Pagination: React.FC = () => {
+const Pagination = () => {
   return <div>Pagination</div>;
 };
 

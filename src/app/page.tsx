@@ -1,12 +1,14 @@
 import type { Metadata } from "next";
 import React from "react";
-import Header from "../../components/header/Header";
+import Header from "@/components/header/Header";
+
 import {
   title,
   description,
   favicon,
 } from "@/components/common/shared-metadata";
 import InnerHeader from "@/components/header/InnerHeader";
+import { auth } from "@/auth";
 
 export const metadata: Metadata = {
   title: title,
@@ -14,7 +16,9 @@ export const metadata: Metadata = {
   icons: favicon,
 };
 
-const Home: React.FC = () => {
+const Home = async () => {
+  const session = await auth();
+
   return (
     <>
       <div className="sticky top-0 bg-white dark:bg-black">
