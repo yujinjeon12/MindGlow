@@ -8,6 +8,7 @@ import Link from "next/link";
 import ToastProvider from "@/components/toastProvider/ToastProvider";
 import { toast } from "react-toastify";
 import Logo from "@/components/logo/Logo";
+import Image from "next/image";
 
 const Login = () => {
   const router = useRouter();
@@ -78,6 +79,25 @@ const Login = () => {
               option="w-full px-2 py-1 text-sm md:text-base h-11 bg-pink"
             />
           </form>
+          <hr className="my-10 border border-light-gray w-full" />
+          <Button
+            bgColor="bg-white"
+            textColor="text-black"
+            value=""
+            option="w-full px-2 py-1 text-sm md:text-base h-11 border border-gray"
+            onClick={() => signIn("google")}
+          >
+            <div className="flex justify-center items-center relative">
+              <Image
+                src="/images/googleLogo.png"
+                alt="google login"
+                width={20}
+                height={20}
+                className="absolute left-2"
+              ></Image>
+              <span>Google 로그인</span>
+            </div>
+          </Button>
           <Link
             href="/signup"
             className="w-full"

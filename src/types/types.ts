@@ -8,4 +8,5 @@ export type ButtonProps = {
   value: string;
   option: string;
   onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  children?: React.ReactNode;
 };

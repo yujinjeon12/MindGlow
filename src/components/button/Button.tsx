@@ -7,12 +7,14 @@ const Button = ({
   value,
   option,
   onClick,
+  children,
 }: ButtonProps) => {
   return (
     <button
-      className={`rounded-sm ${bgColor} ${textColor} font-bold ${option}`}
+      className={`rounded-sm ${bgColor} ${textColor} font-bold ${option} align-middle`}
       onClick={onClick}
     >
+      {children}
       {value}
     </button>
   );
