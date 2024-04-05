@@ -1,14 +1,27 @@
 "use client";
+import { useEffect, useState } from "react";
 import { MdLightMode, MdDarkMode } from "react-icons/md";
-import { useDispatch, useSelector } from "react-redux";
-import { toggleDarkMode } from "@/store/darkmodeSlice";
-import { RootState } from "@/store/store";
 
 const ToggleDarkmode = () => {
-  const darkMode = useSelector((state: RootState) => state.darkMode.value);
-  const dispatch = useDispatch();
+  const [darkMode, setDarkMode] = useState(
+    typeof window !== "undefined" && localStorage.getItem("darkMode")
+      ? true
+      : false
+  );
+
+  useEffect(() => {
+    if (darkMode) {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  }, [darkMode]);
+
   const handleDarkMode = () => {
-    dispatch(toggleDarkMode());
+    setDarkMode(!darkMode);
+    darkMode
+      ? localStorage.removeItem("darkMode")
+      : localStorage.setItem("darkMode", "true");
   };
 
   return (

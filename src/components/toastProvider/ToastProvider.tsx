@@ -1,11 +1,12 @@
 import React from "react";
 import { Slide, ToastContainer } from "react-toastify";
-import { useSelector } from "react-redux";
-import { RootState } from "@/store/store";
 import "react-toastify/dist/ReactToastify.css";
 
 const ToastProvider = () => {
-  const darkMode = useSelector((state: RootState) => state.darkMode.value);
+  const darkMode =
+    typeof window !== "undefined" && localStorage.getItem("darkMode")
+      ? true
+      : false;
 
   return (
     <ToastContainer

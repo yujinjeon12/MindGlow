@@ -5,13 +5,10 @@ import ToggleDarkmode from "../toggleDarkmode/ToggleDarkmode";
 import Button from "../button/Button";
 import { signIn, signOut } from "next-auth/react";
 import { useSession } from "next-auth/react";
-import { useSelector } from "react-redux";
-import { RootState } from "@/store/store";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 const Header = () => {
-  const darkMode = useSelector((state: RootState) => state.darkMode.value);
   const { data: session } = useSession();
   const router = useRouter();
 
