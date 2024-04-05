@@ -1,28 +1,24 @@
 "use client";
 import { useEffect, useState } from "react";
 import { MdLightMode, MdDarkMode } from "react-icons/md";
+import { useTheme } from "next-themes";
 
 const ToggleDarkmode = () => {
-  const [darkMode, setDarkMode] = useState(
-    typeof window !== "undefined" && localStorage.getItem("darkMode")
-      ? true
-      : false
-  );
+  const [mounted, setMounted] = useState(false);
+  const { theme, setTheme } = useTheme();
 
+  // useEffect only runs on the client, so now we can safely show the UI
   useEffect(() => {
-    if (darkMode) {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-  }, [darkMode]);
+    setMounted(true);
+  }, []);
 
   const handleDarkMode = () => {
-    setDarkMode(!darkMode);
-    darkMode
-      ? localStorage.removeItem("darkMode")
-      : localStorage.setItem("darkMode", "true");
+    theme === "dark" ? setTheme("light") : setTheme("dark");
   };
+
+  if (!mounted) {
+    return null;
+  }
 
   return (
     <>
@@ -30,16 +26,20 @@ const ToggleDarkmode = () => {
         className="inline-block p-2 rounded-full bg-transparent align-middle hover:bg-light-gray dark:hover:bg-dark-gray"
         onClick={() => handleDarkMode()}
       >
-        {darkMode ? (
-          <MdDarkMode
-            className="w-5 h-5 mx-0"
-            color="green"
-          />
+        {theme === "dark" ? (
+          <>
+            <MdDarkMode
+              className="w-5 h-5 mx-0"
+              color="green"
+            />
+          </>
         ) : (
-          <MdLightMode
-            className="w-5 h-5 mx-0"
-            color="green"
-          />
+          <>
+            <MdLightMode
+              className="w-5 h-5 mx-0"
+              color="green"
+            />
+          </>
         )}
       </button>
     </>

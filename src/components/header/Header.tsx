@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Logo from "../logo/Logo";
 import ToggleDarkmode from "../toggleDarkmode/ToggleDarkmode";
 import Button from "../button/Button";
@@ -9,8 +9,17 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 const Header = () => {
+  const [mounted, setMounted] = useState(false);
   const { data: session } = useSession();
   const router = useRouter();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return null;
+  }
 
   return (
     <>

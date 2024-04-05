@@ -1,12 +1,10 @@
 import React from "react";
 import { Slide, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useTheme } from "next-themes";
 
 const ToastProvider = () => {
-  const darkMode =
-    typeof window !== "undefined" && localStorage.getItem("darkMode")
-      ? true
-      : false;
+  const { theme, setTheme } = useTheme();
 
   return (
     <ToastContainer
@@ -19,7 +17,7 @@ const ToastProvider = () => {
       pauseOnFocusLoss
       draggable
       pauseOnHover
-      theme={darkMode ? "dark" : "light"}
+      theme={theme}
       transition={Slide}
     />
   );
