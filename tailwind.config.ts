@@ -20,6 +20,12 @@ module.exports = {
       "dark-gray": "#222224",
       white: "#FFFFFF",
     },
+    extend: {
+      cursor: {
+        eraser: "url('/images/erase.png'), pointer",
+        pen: "url('/images/pen.png') 0 24, pointer",
+      },
+    },
   },
   plugins: ["prettier-plugin-tailwindcss"],
   darkMode: "class",
