@@ -4,16 +4,19 @@ import { BsEraserFill } from "react-icons/bs";
 import Button from "../button/Button";
 import Image from "next/image";
 import { debounce } from "@/utils/utils";
+import ModalBase from "../modal/ModalBase";
 
 const Canvas = () => {
+  const initX = useRef<number>(0);
+  const initY = useRef<number>(0);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const colorRef = useRef<HTMLInputElement>(null);
   const [ctx, setCtx] = useState<CanvasRenderingContext2D | null>(null);
+  const [lineWidth, setLineWidth] = useState<string>("3");
   const [isDrawing, setIsDrawing] = useState<boolean>(false);
   const [color, setColor] = useState<string>("#222222"); // default color
   const [eraseMode, setEraseMode] = useState<boolean>(false); // default erase mode
-  const initX = useRef<number>(0);
-  const initY = useRef<number>(0);
+  const [modalIsOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     const canvas = canvasRef.current; // canvas element
@@ -41,7 +44,7 @@ const Canvas = () => {
           canvas.width = parseInt(window.getComputedStyle(wrapper).width);
           canvas.height = parseInt(window.getComputedStyle(wrapper).height);
           ctx.fillStyle = "#ffffff";
-          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          ctx.fillRect(0, 0, canvas.width, canvas.height); // Set the default background color of the canvas
         }
       }
     }
@@ -56,9 +59,17 @@ const Canvas = () => {
     initY.current = e.clientY - element.getBoundingClientRect().top;
 
     if (!eraseMode && ctx) {
-      // flil canvas with background color
+      ctx.beginPath();
+      ctx.arc(
+        initX.current,
+        initY.current,
+        Number(lineWidth) / 2,
+        0,
+        2 * Math.PI
+      );
       ctx.fillStyle = color;
-      ctx.fillRect(initX.current, initY.current, 2, 2);
+      ctx.fill();
+      ctx.closePath();
     }
     setIsDrawing(true);
   };
@@ -75,7 +86,7 @@ const Canvas = () => {
         ctx.lineWidth = 50;
       } else {
         ctx.strokeStyle = color;
-        ctx.lineWidth = 3;
+        ctx.lineWidth = Number(lineWidth);
         ctx.lineCap = "round"; // 선의 끝 모양을 둥글게
         ctx.lineJoin = "round"; // 선의 연결점을 둥글게 처리
       }
@@ -95,18 +106,30 @@ const Canvas = () => {
       ctx.fillRect(0, 0, canvas.width, canvas.height);
     }
   };
-  function handleSave() {
+  const handleSave = () => {
     const link = document.createElement("a");
     link.download = "draw-emotion.png";
     link.href = canvasRef.current?.toDataURL() ?? "";
     link.click();
-  }
+  };
+
+  const handleLineWidth = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsOpen(true);
+  };
+  const handleOverlay = () => {
+    setIsOpen(false);
+  };
+
   return (
     <section className="h-svh m-2">
       <h1 className="sm:text-lg md:text-2xl font-bold text-left my-4">
         Draw Emotion
       </h1>
-      <div className="h-2/3 flex flex-wrap justify-items-end items-start bg-light-gray pl-4 pt-4 pr-4 rounded-md">
+      <div
+        className="h-2/3 flex flex-wrap justify-items-end items-start bg-light-gray pl-4 pt-4 pr-4 rounded-md"
+        onClick={handleOverlay}
+      >
         <div className="w-full h-5/6 bg-white rounded-t-lg shadow-2xl">
           <canvas
             className={`block ${eraseMode ? "cursor-eraser" : "cursor-pen"}`}
@@ -119,20 +142,39 @@ const Canvas = () => {
             draw emotion canvas
           </canvas>
         </div>
-        <input
-          ref={colorRef}
-          type="color"
-          width="0"
-          height="0"
-          value="#fefefe"
-          className="inline-block ml-2 w-0 invisible"
-          onChange={(e) => {
-            setColor(e.target.value);
-          }}
-        ></input>
-        <div>
+
+        <div className=" relative h-1/6 content-center z-0">
+          {modalIsOpen && (
+            <ModalBase customStyles="absolute -top-14 left-10 p-4">
+              <div className="flex flex-col items-start">
+                <span className="text-lg font-bold">선 굵기 {lineWidth}</span>
+                <input
+                  type="range"
+                  min="1"
+                  max="30"
+                  defaultValue={lineWidth}
+                  onChange={(e) => {
+                    if (ctx) {
+                      setLineWidth(e.target.value);
+                    }
+                  }}
+                />
+              </div>
+            </ModalBase>
+          )}
+          <input
+            ref={colorRef}
+            type="color"
+            width="0"
+            height="0"
+            value="#fefefe"
+            className="inline-block ml-2 w-0 invisible"
+            onChange={(e) => {
+              setColor(e.target.value);
+            }}
+          ></input>
           <span
-            className={`rounded-md w-6 h-6 inline-block align-bottom`}
+            className={`rounded-md w-6 h-6 inline-block align-middle`}
             style={{ backgroundColor: color }}
             onClick={() => {
               colorRef.current?.click();
@@ -140,14 +182,15 @@ const Canvas = () => {
             }}
           ></span>
           <Image
-            className="mx-4 inline-block w-7 h-7 cursor-pointer align-bottom"
+            className="mx-4 inline-block w-7 h-7 cursor-pointer align-middle"
             src="/images/linewidth.svg"
             width={28}
             height={28}
             alt="line-width"
+            onClick={handleLineWidth}
           />
           <BsEraserFill
-            className="w-7 h-7 inline-block cursor-pointer align-bottom"
+            className="w-7 h-7 inline-block cursor-pointer align-middle"
             onClick={erase}
           />
           <Button
