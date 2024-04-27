@@ -54,6 +54,7 @@ const Canvas = () => {
     setIsDrawing(false);
   };
   const mouseDown = (e: React.MouseEvent<HTMLCanvasElement, MouseEvent>) => {
+    setIsOpen(false);
     const element = e.target as Element;
     initX.current = e.clientX - element.getBoundingClientRect().left;
     initY.current = e.clientY - element.getBoundingClientRect().top;
