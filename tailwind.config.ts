@@ -22,7 +22,7 @@ module.exports = {
     },
     extend: {
       cursor: {
-        eraser: "url('/images/erase.png'), pointer",
+        eraser: "url('/images/eraser.png') 0 24, pointer",
         pen: "url('/images/pen.png') 0 24, pointer",
       },
     },
