@@ -6,13 +6,20 @@ import Image from "next/image";
 import { debounce } from "@/utils/utils";
 import ModalBase from "../modal/ModalBase";
 
+type lineProps = {
+  color: string;
+  lineWidth: number;
+  lineAlpha: number;
+};
 const Canvas = () => {
-  const initX = useRef<number>(0);
-  const initY = useRef<number>(0);
+  const paths = useRef<
+    Array<Array<{ x: number; y: number; lineProps?: lineProps }>>
+  >([]);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const colorRef = useRef<HTMLInputElement>(null);
   const [ctx, setCtx] = useState<CanvasRenderingContext2D | null>(null);
-  const [lineWidth, setLineWidth] = useState<string>("3");
+  const [lineWidth, setLineWidth] = useState<number>(3);
+  const [lineAlpha, setLineAlpha] = useState<number>(10);
   const [isDrawing, setIsDrawing] = useState<boolean>(false);
   const [color, setColor] = useState<string>("#222222"); // default color
   const [eraseMode, setEraseMode] = useState<boolean>(false); // default erase mode
@@ -54,46 +61,58 @@ const Canvas = () => {
     setIsDrawing(false);
   };
   const mouseDown = (e: React.MouseEvent<HTMLCanvasElement, MouseEvent>) => {
-    setIsOpen(false);
-    const element = e.target as Element;
-    initX.current = e.clientX - element.getBoundingClientRect().left;
-    initY.current = e.clientY - element.getBoundingClientRect().top;
+    if (!canvasRef.current) return;
 
-    if (!eraseMode && ctx) {
-      ctx.beginPath();
-      ctx.arc(
-        initX.current,
-        initY.current,
-        Number(lineWidth) / 2,
-        0,
-        2 * Math.PI
-      );
-      ctx.fillStyle = color;
-      ctx.fill();
-      ctx.closePath();
-    }
+    setIsOpen(false);
+    const rect = canvasRef.current.getBoundingClientRect();
+    const currentProps = eraseMode
+      ? { color: "#ffffff", lineWidth: 50, lineAlpha: 1 }
+      : { color, lineWidth, lineAlpha: lineAlpha / 10 };
+    paths.current.push([
+      {
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top,
+        lineProps: currentProps,
+      },
+    ]);
     setIsDrawing(true);
   };
   const mouseMove = (e: React.MouseEvent<HTMLCanvasElement, MouseEvent>) => {
-    if (ctx && isDrawing) {
-      ctx.beginPath();
-      ctx.moveTo(initX.current, initY.current);
-      const element = e.target as Element;
-      initX.current = e.clientX - element.getBoundingClientRect().left;
-      initY.current = e.clientY - element.getBoundingClientRect().top;
-      ctx.lineTo(initX.current, initY.current);
-      if (eraseMode) {
-        ctx.strokeStyle = "#ffffff";
-        ctx.lineWidth = 50;
-      } else {
-        ctx.strokeStyle = color;
-        ctx.lineWidth = Number(lineWidth);
-        ctx.lineCap = "round"; // 선의 끝 모양을 둥글게
-        ctx.lineJoin = "round"; // 선의 연결점을 둥글게 처리
-      }
-      ctx.closePath();
+    if (!canvasRef.current || !isDrawing) return;
+
+    const ctx = canvasRef.current.getContext("2d");
+    if (!ctx) return; // Add null check for ctx
+
+    ctx.lineJoin = "round";
+    ctx.lineCap = "round";
+    const { clientX, clientY } = e;
+    const rect = canvasRef.current.getBoundingClientRect();
+    const offsetX = clientX - rect.left;
+    const offsetY = clientY - rect.top;
+    paths.current[paths.current.length - 1].push({ x: offsetX, y: offsetY }); // Add the current point to the path
+    redraw();
+  };
+  const redraw = () => {
+    if (!canvasRef.current) return;
+    const ctx = canvasRef.current.getContext("2d");
+
+    if (!ctx) return;
+    ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+    paths.current.forEach((path) => {
+      path.forEach((point) => {
+        if (point.lineProps) {
+          ctx.globalAlpha = point.lineProps.lineAlpha;
+          ctx.strokeStyle = point.lineProps.color;
+          ctx.lineWidth = point.lineProps.lineWidth;
+          ctx.beginPath();
+          ctx.moveTo(point.x, point.y);
+        }
+        ctx.lineTo(point.x, point.y);
+      });
       ctx.stroke();
-    }
+    });
   };
   const erase = () => {
     setEraseMode(true);
@@ -102,6 +121,7 @@ const Canvas = () => {
     const canvas = canvasRef.current;
     const ctx = canvas?.getContext("2d");
     if (canvas && ctx) {
+      paths.current = []; // Clear the paths
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.fillStyle = "#ffffff";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -148,7 +168,7 @@ const Canvas = () => {
           {modalIsOpen && (
             <ModalBase customStyles="absolute -top-14 left-10 p-4">
               <div className="flex flex-col items-start">
-                <span className="text-lg font-bold">선 굵기 {lineWidth}</span>
+                <span className="text-lg font-bold">선 두께 {lineWidth}</span>
                 <input
                   type="range"
                   min="1"
@@ -156,7 +176,19 @@ const Canvas = () => {
                   defaultValue={lineWidth}
                   onChange={(e) => {
                     if (ctx) {
-                      setLineWidth(e.target.value);
+                      setLineWidth(Number(e.target.value));
+                    }
+                  }}
+                />
+                <span className="text-lg font-bold">선 투명도 {lineAlpha}</span>
+                <input
+                  type="range"
+                  min="1"
+                  max="10"
+                  defaultValue={lineAlpha}
+                  onChange={(e) => {
+                    if (ctx) {
+                      setLineAlpha(Number(e.target.value));
                     }
                   }}
                 />
