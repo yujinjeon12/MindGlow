@@ -46,10 +46,22 @@ const Canvas = () => {
       const ctx = canvas.getContext("2d");
       if (ctx) {
         setCtx(ctx);
-        var wrapper = canvas.parentNode;
+        const wrapper = canvas.parentNode;
         if (wrapper instanceof Element) {
-          canvas.width = parseInt(window.getComputedStyle(wrapper).width);
-          canvas.height = parseInt(window.getComputedStyle(wrapper).height);
+          // 디스플레이 크기 (css 픽셀) 를 설정
+          const widthSize = parseInt(window.getComputedStyle(wrapper).width);
+          const heightSize = parseInt(window.getComputedStyle(wrapper).height);
+          canvas.style.width = `${widthSize}px`;
+          canvas.style.height = `${heightSize}px`;
+
+          // 메모리에서 실제 크기를 설정 (추가 픽셀 밀도를 고려한 스케일 조정)
+          const scale = window.devicePixelRatio;
+          canvas.width = Math.floor(widthSize * scale);
+          canvas.height = Math.floor(heightSize * scale);
+
+          // 좌표계를 정규화하여 CSS 픽셀을 사용
+          ctx.scale(scale, scale);
+
           ctx.fillStyle = "#ffffff";
           ctx.fillRect(0, 0, canvas.width, canvas.height); // Set the default background color of the canvas
         }
