@@ -13,7 +13,15 @@ type lineProps = {
 };
 const Canvas = () => {
   const paths = useRef<
-    Array<Array<{ x: number; y: number; lineProps?: lineProps }>>
+    Array<
+      Array<{
+        x: number;
+        y: number;
+        canvasWidth: number;
+        canvasHeight: number;
+        lineProps?: lineProps;
+      }>
+    >
   >([]);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const colorRef = useRef<HTMLInputElement>(null);
@@ -62,8 +70,7 @@ const Canvas = () => {
           // 좌표계를 정규화하여 CSS 픽셀을 사용
           ctx.scale(scale, scale);
 
-          ctx.fillStyle = "#ffffff";
-          ctx.fillRect(0, 0, canvas.width, canvas.height); // Set the default background color of the canvas
+          redraw();
         }
       }
     }
@@ -78,12 +85,22 @@ const Canvas = () => {
     setIsOpen(false);
     const rect = canvasRef.current.getBoundingClientRect();
     const currentProps = eraseMode
-      ? { color: "#ffffff", lineWidth: 50, lineAlpha: 1 }
-      : { color, lineWidth, lineAlpha: lineAlpha / 10 };
+      ? {
+          color: "#ffffff",
+          lineWidth: 50,
+          lineAlpha: 1,
+        }
+      : {
+          color,
+          lineWidth,
+          lineAlpha: lineAlpha / 10,
+        };
     paths.current.push([
       {
         x: e.clientX - rect.left,
         y: e.clientY - rect.top,
+        canvasWidth: parseInt(canvasRef.current.style.width),
+        canvasHeight: parseInt(canvasRef.current.style.height),
         lineProps: currentProps,
       },
     ]);
@@ -101,27 +118,40 @@ const Canvas = () => {
     const rect = canvasRef.current.getBoundingClientRect();
     const offsetX = clientX - rect.left;
     const offsetY = clientY - rect.top;
-    paths.current[paths.current.length - 1].push({ x: offsetX, y: offsetY }); // Add the current point to the path
+    paths.current[paths.current.length - 1].push({
+      x: offsetX,
+      y: offsetY,
+      canvasWidth: parseInt(canvasRef.current.style.width),
+      canvasHeight: parseInt(canvasRef.current.style.height),
+    }); // Add the current point to the path
     redraw();
   };
   const redraw = () => {
     if (!canvasRef.current) return;
     const ctx = canvasRef.current.getContext("2d");
 
+    //current canvas size
+    const width = parseInt(canvasRef.current.style.width);
+    const height = parseInt(canvasRef.current.style.height);
+
     if (!ctx) return;
-    ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+    ctx.clearRect(0, 0, width, height);
+    ctx.globalAlpha = 1;
     ctx.fillStyle = "#ffffff";
-    ctx.fillRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+    ctx.fillRect(0, 0, width, height);
     paths.current.forEach((path) => {
       path.forEach((point) => {
+        const scaledX = (width / point.canvasWidth) * point.x;
+        const scaledY = (height / point.canvasHeight) * point.y;
+
         if (point.lineProps) {
           ctx.globalAlpha = point.lineProps.lineAlpha;
           ctx.strokeStyle = point.lineProps.color;
           ctx.lineWidth = point.lineProps.lineWidth;
           ctx.beginPath();
-          ctx.moveTo(point.x, point.y);
+          ctx.moveTo(scaledX, scaledY);
         }
-        ctx.lineTo(point.x, point.y);
+        ctx.lineTo(scaledX, scaledY);
       });
       ctx.stroke();
     });
