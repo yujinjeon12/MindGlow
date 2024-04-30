@@ -57,8 +57,10 @@ const Canvas = () => {
         const wrapper = canvas.parentNode;
         if (wrapper instanceof Element) {
           // 디스플레이 크기 (css 픽셀) 를 설정
-          const widthSize = parseInt(window.getComputedStyle(wrapper).width);
-          const heightSize = parseInt(window.getComputedStyle(wrapper).height);
+          const widthSize = parseFloat(window.getComputedStyle(wrapper).width);
+          const heightSize = parseFloat(
+            window.getComputedStyle(wrapper).height
+          );
           canvas.style.width = `${widthSize}px`;
           canvas.style.height = `${heightSize}px`;
 
@@ -69,7 +71,6 @@ const Canvas = () => {
 
           // 좌표계를 정규화하여 CSS 픽셀을 사용
           ctx.scale(scale, scale);
-
           redraw();
         }
       }
@@ -78,6 +79,7 @@ const Canvas = () => {
 
   const mouseUp = (e: React.MouseEvent<HTMLCanvasElement, MouseEvent>) => {
     setIsDrawing(false);
+    redraw();
   };
   const mouseDown = (e: React.MouseEvent<HTMLCanvasElement, MouseEvent>) => {
     if (!canvasRef.current) return;
@@ -112,19 +114,19 @@ const Canvas = () => {
     const ctx = canvasRef.current.getContext("2d");
     if (!ctx) return; // Add null check for ctx
 
-    ctx.lineJoin = "round";
-    ctx.lineCap = "round";
     const { clientX, clientY } = e;
     const rect = canvasRef.current.getBoundingClientRect();
     const offsetX = clientX - rect.left;
     const offsetY = clientY - rect.top;
-    paths.current[paths.current.length - 1].push({
-      x: offsetX,
-      y: offsetY,
-      canvasWidth: parseInt(canvasRef.current.style.width),
-      canvasHeight: parseInt(canvasRef.current.style.height),
-    }); // Add the current point to the path
-    redraw();
+    if (paths.current[paths.current.length - 1]) {
+      paths.current[paths.current.length - 1].push({
+        x: offsetX,
+        y: offsetY,
+        canvasWidth: parseInt(canvasRef.current.style.width),
+        canvasHeight: parseInt(canvasRef.current.style.height),
+      }); // Add the current point to the path
+      redraw();
+    }
   };
   const redraw = () => {
     if (!canvasRef.current) return;
@@ -136,6 +138,8 @@ const Canvas = () => {
 
     if (!ctx) return;
     ctx.clearRect(0, 0, width, height);
+    ctx.lineJoin = "round";
+    ctx.lineCap = "round";
     ctx.globalAlpha = 1;
     ctx.fillStyle = "#ffffff";
     ctx.fillRect(0, 0, width, height);
@@ -214,7 +218,7 @@ const Canvas = () => {
                 <input
                   type="range"
                   min="1"
-                  max="30"
+                  max="50"
                   defaultValue={lineWidth}
                   onChange={(e) => {
                     if (ctx) {
