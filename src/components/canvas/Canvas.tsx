@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
 import { BsEraserFill } from "react-icons/bs";
+import { IoMdReturnLeft, IoMdReturnRight } from "react-icons/io";
 import Button from "../button/Button";
 import Image from "next/image";
 import { debounce } from "@/utils/utils";
@@ -11,18 +12,18 @@ type lineProps = {
   lineWidth: number;
   lineAlpha: number;
 };
+type Point = {
+  x: number;
+  y: number;
+  canvasWidth: number;
+  canvasHeight: number;
+  lineProps?: lineProps;
+};
+type Path = Point[];
+
 const Canvas = () => {
-  const paths = useRef<
-    Array<
-      Array<{
-        x: number;
-        y: number;
-        canvasWidth: number;
-        canvasHeight: number;
-        lineProps?: lineProps;
-      }>
-    >
-  >([]);
+  const [paths, setPaths] = useState<Path[]>([]);
+  const [undonePaths, setUndonePaths] = useState<Path[]>([]);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const colorRef = useRef<HTMLInputElement>(null);
   const [ctx, setCtx] = useState<CanvasRenderingContext2D | null>(null);
@@ -48,6 +49,10 @@ const Canvas = () => {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
+
+  useEffect(() => {
+    redraw();
+  }, [paths]);
 
   const initializeCanvas = (canvas: HTMLCanvasElement | null) => {
     if (canvas) {
@@ -79,7 +84,6 @@ const Canvas = () => {
 
   const mouseUp = (e: React.MouseEvent<HTMLCanvasElement, MouseEvent>) => {
     setIsDrawing(false);
-    redraw();
   };
   const mouseDown = (e: React.MouseEvent<HTMLCanvasElement, MouseEvent>) => {
     if (!canvasRef.current) return;
@@ -97,14 +101,18 @@ const Canvas = () => {
           lineWidth,
           lineAlpha: lineAlpha / 10,
         };
-    paths.current.push([
-      {
-        x: e.clientX - rect.left,
-        y: e.clientY - rect.top,
-        canvasWidth: parseInt(canvasRef.current.style.width),
-        canvasHeight: parseInt(canvasRef.current.style.height),
-        lineProps: currentProps,
-      },
+    //add new path
+    setPaths([
+      ...paths,
+      [
+        {
+          x: e.clientX - rect.left,
+          y: e.clientY - rect.top,
+          canvasWidth: parseInt(canvasRef.current.style.width),
+          canvasHeight: parseInt(canvasRef.current.style.height),
+          lineProps: currentProps,
+        },
+      ],
     ]);
     setIsDrawing(true);
   };
@@ -118,24 +126,23 @@ const Canvas = () => {
     const rect = canvasRef.current.getBoundingClientRect();
     const offsetX = clientX - rect.left;
     const offsetY = clientY - rect.top;
-    if (paths.current[paths.current.length - 1]) {
-      paths.current[paths.current.length - 1].push({
+    const lastPath = paths[paths.length - 1];
+    if (lastPath) {
+      lastPath.push({
         x: offsetX,
         y: offsetY,
         canvasWidth: parseInt(canvasRef.current.style.width),
         canvasHeight: parseInt(canvasRef.current.style.height),
-      }); // Add the current point to the path
-      redraw();
+      });
     }
+    setPaths([...paths.slice(0, paths.length - 1), lastPath]); //add new point to the last path
   };
   const redraw = () => {
     if (!canvasRef.current) return;
     const ctx = canvasRef.current.getContext("2d");
-
     //current canvas size
     const width = parseInt(canvasRef.current.style.width);
     const height = parseInt(canvasRef.current.style.height);
-
     if (!ctx) return;
     ctx.clearRect(0, 0, width, height);
     ctx.lineJoin = "round";
@@ -143,7 +150,7 @@ const Canvas = () => {
     ctx.globalAlpha = 1;
     ctx.fillStyle = "#ffffff";
     ctx.fillRect(0, 0, width, height);
-    paths.current.forEach((path) => {
+    paths.forEach((path) => {
       path.forEach((point) => {
         const scaledX = (width / point.canvasWidth) * point.x;
         const scaledY = (height / point.canvasHeight) * point.y;
@@ -167,7 +174,8 @@ const Canvas = () => {
     const canvas = canvasRef.current;
     const ctx = canvas?.getContext("2d");
     if (canvas && ctx) {
-      paths.current = []; // Clear the paths
+      setPaths([]); // Clear the paths
+      setUndonePaths([]); // Clear the undone paths
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.fillStyle = "#ffffff";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -186,6 +194,18 @@ const Canvas = () => {
   };
   const handleOverlay = () => {
     setIsOpen(false);
+  };
+  const undo = () => {
+    if (paths.length) {
+      setUndonePaths([...undonePaths, paths[paths.length - 1]]);
+      setPaths(paths.slice(0, paths.length - 1));
+    }
+  };
+  const redo = () => {
+    if (undonePaths.length) {
+      setPaths([...paths, undonePaths[undonePaths.length - 1]]);
+      setUndonePaths(undonePaths.slice(0, undonePaths.length - 1));
+    }
   };
 
   return (
@@ -269,8 +289,18 @@ const Canvas = () => {
             onClick={handleLineWidth}
           />
           <BsEraserFill
-            className="w-7 h-7 inline-block cursor-pointer align-middle"
+            className="w-7 h-7 inline-block cursor-pointer align-middle mr-4"
             onClick={erase}
+          />
+          <IoMdReturnLeft
+            className="w-7 h-7 inline-block cursor-pointer align-middle mr-4"
+            color={paths.length == 0 ? "white" : "gray"}
+            onClick={undo}
+          />
+          <IoMdReturnRight
+            className="w-7 h-7 inline-block cursor-pointer align-middle"
+            color={undonePaths.length == 0 ? "white" : "gray"}
+            onClick={redo}
           />
           <Button
             onClick={eraseAll}
