@@ -39,7 +39,7 @@ const Header = () => {
           bgColor="bg-green"
           textColor="text-white"
           value="글쓰기"
-          option="ml-2 md:ml-8 px-2 py-1 text-sm md:text-base"
+          option="ml-2 md:ml-8 px-2 py-1 text-sm md:text-base rounded-md"
         />
         {
           // 로그인 상태일 때
@@ -49,7 +49,7 @@ const Header = () => {
                 bgColor="bg-white"
                 textColor="text-black"
                 value="로그아웃"
-                option="ml-2 md:ml-4 border border-gray dark:border-white px-2 py-1 text-sm md:text-base"
+                option="ml-2 md:ml-4 border border-gray dark:border-white px-2 py-1 text-sm md:text-base rounded-md"
                 onClick={() => signOut()}
               />
             </>
@@ -58,7 +58,7 @@ const Header = () => {
               bgColor="bg-white"
               textColor="text-black"
               value="로그인"
-              option="ml-2 md:ml-4 border border-gray dark:border-white px-2 py-1 text-sm md:text-base"
+              option="ml-2 md:ml-4 border border-gray dark:border-white px-2 py-1 text-sm md:text-base rounded-md"
               onClick={() => signIn()}
             />
           )

@@ -265,12 +265,12 @@ const Canvas = () => {
   };
 
   return (
-    <section className="h-svh m-2">
+    <section className="h-full m-2">
       <h1 className="sm:text-lg md:text-2xl font-bold text-left my-4">
         Draw Emotion
       </h1>
       <div
-        className="h-2/3 flex flex-wrap justify-items-end items-start bg-light-gray pl-4 pt-4 pr-4 rounded-md"
+        className="h-4/6 flex flex-wrap justify-center items-center bg-light-gray pl-4 pt-4 pr-4 rounded-md"
         onClick={handleOverlay}
       >
         <div className="w-full h-5/6 bg-white rounded-t-lg shadow-2xl">
@@ -363,19 +363,21 @@ const Canvas = () => {
           />
           <Button
             onClick={eraseAll}
-            bgColor="bg-green"
+            bgColor="bg-dark-gray"
             textColor="text-white"
-            value="초기화"
-            option="w-20 h-8 mx-4 rounded-md"
-          />
-          <Button
-            onClick={handleSave}
-            bgColor="bg-pink"
-            textColor="text-white"
-            value="저장"
-            option="w-20 h-8 rounded-md"
+            value="RESET"
+            option="w-16 h-8 mx-4 rounded-md"
           />
         </div>
+      </div>
+      <div className="flex justify-end mt-4">
+        <Button
+          onClick={handleSave}
+          bgColor="bg-pink"
+          textColor="text-white"
+          value="SAVE"
+          option="w-16 h-8 rounded-md"
+        />
       </div>
     </section>
   );

@@ -95,7 +95,7 @@ const Signup = () => {
               bgColor="bg-pink"
               textColor="text-white"
               value="회원가입"
-              option="w-full px-2 py-1 text-sm md:text-base h-11"
+              option="w-full px-2 py-1 text-sm md:text-base h-11 rounded-sm"
             />
           </form>
         </div>

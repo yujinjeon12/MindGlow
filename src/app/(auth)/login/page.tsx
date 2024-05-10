@@ -76,7 +76,7 @@ const Login = () => {
               bgColor="bg-dark-gray"
               textColor="text-white"
               value="로그인"
-              option="w-full px-2 py-1 text-sm md:text-base h-11 bg-pink"
+              option="w-full px-2 py-1 text-sm md:text-base h-11 bg-pink rounded-sm"
             />
           </form>
           <hr className="my-10 border border-light-gray w-full" />
@@ -84,7 +84,7 @@ const Login = () => {
             bgColor="bg-white"
             textColor="text-black"
             value=""
-            option="w-full px-2 py-1 text-sm md:text-base h-11 border border-gray"
+            option="w-full px-2 py-1 text-sm md:text-base h-11 border border-gray rounded-sm"
             onClick={() => signIn("google")}
           >
             <div className="flex justify-center items-center relative">

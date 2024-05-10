@@ -11,7 +11,7 @@ const Button = ({
 }: ButtonProps) => {
   return (
     <button
-      className={`rounded-sm ${bgColor} ${textColor} font-bold ${option} align-middle`}
+      className={`${bgColor} ${textColor} font-bold ${option} align-middle`}
       onClick={onClick}
     >
       {children}
