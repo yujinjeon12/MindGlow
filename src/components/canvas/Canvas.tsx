@@ -208,6 +208,62 @@ const Canvas = () => {
     }
   };
 
+  const touchStart = (e: React.TouchEvent<HTMLCanvasElement>) => {
+    if (!canvasRef.current) return;
+
+    setIsOpen(false);
+    const rect = canvasRef.current.getBoundingClientRect();
+    const currentProps = eraseMode
+      ? {
+          color: "#ffffff",
+          lineWidth: 50,
+          lineAlpha: 1,
+        }
+      : {
+          color,
+          lineWidth,
+          lineAlpha: lineAlpha / 10,
+        };
+    //add new path
+    setPaths([
+      ...paths,
+      [
+        {
+          x: e.touches[0].clientX - rect.left,
+          y: e.touches[0].clientY - rect.top,
+          canvasWidth: parseInt(canvasRef.current.style.width),
+          canvasHeight: parseInt(canvasRef.current.style.height),
+          lineProps: currentProps,
+        },
+      ],
+    ]);
+    setIsDrawing(true);
+  };
+  const touchMove = (e: React.TouchEvent<HTMLCanvasElement>) => {
+    if (!canvasRef.current || !isDrawing) return;
+
+    const ctx = canvasRef.current.getContext("2d");
+    if (!ctx) return; // Add null check for ctx
+
+    const { clientX, clientY } = e.touches[0];
+    const rect = canvasRef.current.getBoundingClientRect();
+    const offsetX = clientX - rect.left;
+    const offsetY = clientY - rect.top;
+    const lastPath = paths[paths.length - 1];
+    if (lastPath) {
+      lastPath.push({
+        x: offsetX,
+        y: offsetY,
+        canvasWidth: parseInt(canvasRef.current.style.width),
+        canvasHeight: parseInt(canvasRef.current.style.height),
+      });
+    }
+    setPaths([...paths.slice(0, paths.length - 1), lastPath]); //add new point to the last path
+  };
+  const touchEnd = (e: React.TouchEvent<HTMLCanvasElement>) => {
+    setIsDrawing(false);
+  };
+
   return (
     <section className="h-svh m-2">
       <h1 className="sm:text-lg md:text-2xl font-bold text-left my-4">
@@ -225,6 +281,9 @@ const Canvas = () => {
             onMouseUp={mouseUp}
             onMouseDown={mouseDown}
             onMouseMove={mouseMove}
+            onTouchStart={touchStart}
+            onTouchMove={touchMove}
+            onTouchEnd={touchEnd}
           >
             draw emotion canvas
           </canvas>
