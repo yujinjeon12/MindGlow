@@ -289,7 +289,7 @@ const Canvas = () => {
           </canvas>
         </div>
 
-        <div className=" relative h-1/6 content-center z-0">
+        <div className="flex relative h-1/6 items-center z-0">
           {modalIsOpen && (
             <ModalBase customStyles="absolute -top-14 left-10 p-4">
               <div className="flex flex-col items-start">
@@ -326,7 +326,7 @@ const Canvas = () => {
             width="0"
             height="0"
             value="#fefefe"
-            className="inline-block ml-2 w-0 invisible"
+            className={`inline-block w-0 invisible caret-transparent`}
             onChange={(e) => {
               setColor(e.target.value);
             }}
@@ -366,7 +366,7 @@ const Canvas = () => {
             bgColor="bg-dark-gray"
             textColor="text-white"
             value="RESET"
-            option="w-16 h-8 mx-4 rounded-md"
+            option="w-16 h-8 ml-4 rounded-md"
           />
         </div>
       </div>
