@@ -3,8 +3,9 @@ import React, { useState, useEffect, useRef } from "react";
 import { BsEraserFill } from "react-icons/bs";
 import { IoMdReturnLeft, IoMdReturnRight } from "react-icons/io";
 import Button from "../button/Button";
-import Image from "next/image";
+import NextImage from "next/image";
 import { debounce } from "@/utils/utils";
+import { ImBin } from "react-icons/im";
 import ModalBase from "../modal/ModalBase";
 
 type lineProps = {
@@ -265,17 +266,17 @@ const Canvas = () => {
   };
 
   return (
-    <section className="h-full m-2">
-      <h1 className="sm:text-lg md:text-2xl font-bold text-left my-4">
-        Draw Emotion
+    <section className="w-full h-full pb-8">
+      <h1 className="font-bold text-left my-4 mx-2 md:mx-0">
+        오늘의 감정을 그림으로 표현해보세요.
       </h1>
       <div
-        className="h-4/6 flex flex-wrap justify-center items-center bg-light-gray pl-4 pt-4 pr-4 rounded-md"
+        className="h-5/6 flex flex-wrap justify-center items-center px-4 py-4 mx-2 md:mx-0 rounded-md bg-yellow"
         onClick={handleOverlay}
       >
-        <div className="w-full h-5/6 bg-white rounded-t-lg shadow-2xl">
+        <div className="w-full h-full bg-white rounded-t-lg shadow-2xl">
           <canvas
-            className={`block ${eraseMode ? "cursor-eraser" : "cursor-pen"}`}
+            className={`block ${eraseMode ? "cursor-eraser" : "cursor-pen"} rounded-md`}
             id="canvas"
             ref={canvasRef}
             onMouseUp={mouseUp}
@@ -288,8 +289,7 @@ const Canvas = () => {
             draw emotion canvas
           </canvas>
         </div>
-
-        <div className="flex relative h-1/6 items-center z-0">
+        <div className="flex h-fit relative items-center z-0 bottom-16 bg-light-gray p-2 rounded-md">
           {modalIsOpen && (
             <ModalBase customStyles="absolute -top-14 left-10 p-4">
               <div className="flex flex-col items-start">
@@ -339,7 +339,7 @@ const Canvas = () => {
               setEraseMode(false);
             }}
           ></span>
-          <Image
+          <NextImage
             className="mx-4 inline-block w-7 h-7 cursor-pointer align-middle"
             src="/images/linewidth.svg"
             width={28}
@@ -348,36 +348,31 @@ const Canvas = () => {
             onClick={handleLineWidth}
           />
           <BsEraserFill
-            className="w-7 h-7 inline-block cursor-pointer align-middle mr-4"
+            className="w-6 h-6 inline-block cursor-pointer align-middle mr-4 text-dark-gray"
             onClick={erase}
           />
           <IoMdReturnLeft
-            className="w-7 h-7 inline-block cursor-pointer align-middle mr-4"
-            color={paths.length == 0 ? "white" : "gray"}
+            className="w-6 h-6 inline-block cursor-pointer align-middle mr-4 bg-gray rounded-full p-1"
+            color={paths.length == 0 ? "white" : "black"}
             onClick={undo}
           />
           <IoMdReturnRight
-            className="w-7 h-7 inline-block cursor-pointer align-middle"
-            color={undonePaths.length == 0 ? "white" : "gray"}
+            className="w-6 h-6 inline-block cursor-pointer align-middle mr-4 bg-gray rounded-full p-1"
+            color={undonePaths.length == 0 ? "white" : "black"}
             onClick={redo}
           />
-          <Button
+          <ImBin
+            className="w-6 h-6 inline-block cursor-pointer align-middle mr-4 text-dark-gray"
             onClick={eraseAll}
-            bgColor="bg-dark-gray"
+          />
+          <Button
+            onClick={handleSave}
+            bgColor="bg-pink"
             textColor="text-white"
-            value="RESET"
-            option="w-16 h-8 ml-4 rounded-md"
+            value="SAVE"
+            option="w-14 h-8 rounded-md text-sm"
           />
         </div>
-      </div>
-      <div className="flex justify-end mt-4">
-        <Button
-          onClick={handleSave}
-          bgColor="bg-pink"
-          textColor="text-white"
-          value="SAVE"
-          option="w-16 h-8 rounded-md"
-        />
       </div>
     </section>
   );
