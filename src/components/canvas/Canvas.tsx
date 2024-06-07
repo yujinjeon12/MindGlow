@@ -39,47 +39,43 @@ const Canvas = () => {
     const canvas = canvasRef.current; // canvas element
     const handleResize = debounce(() => {
       initializeCanvas(canvas);
+      clearCanvas();
+      drawPaths();
     }, 300); // 300ms의 딜레이로 debounce
 
     if (canvas) {
       initializeCanvas(canvas);
+      drawPaths();
       window.addEventListener("resize", handleResize);
     }
 
     return () => {
       window.removeEventListener("resize", handleResize);
     };
-  }, []);
-
-  useEffect(() => {
-    redraw();
   }, [paths]);
 
   const initializeCanvas = (canvas: HTMLCanvasElement | null) => {
-    if (canvas) {
-      const ctx = canvas.getContext("2d");
-      if (ctx) {
-        setCtx(ctx);
-        const wrapper = canvas.parentNode;
-        if (wrapper instanceof Element) {
-          // 디스플레이 크기 (css 픽셀) 를 설정
-          const widthSize = parseFloat(window.getComputedStyle(wrapper).width);
-          const heightSize = parseFloat(
-            window.getComputedStyle(wrapper).height
-          );
-          canvas.style.width = `${widthSize}px`;
-          canvas.style.height = `${heightSize}px`;
+    if (!canvas) return;
 
-          // 메모리에서 실제 크기를 설정 (추가 픽셀 밀도를 고려한 스케일 조정)
-          const scale = window.devicePixelRatio;
-          canvas.width = Math.floor(widthSize * scale);
-          canvas.height = Math.floor(heightSize * scale);
+    const context = canvas.getContext("2d");
+    if (!context) return;
 
-          // 좌표계를 정규화하여 CSS 픽셀을 사용
-          ctx.scale(scale, scale);
-          redraw();
-        }
-      }
+    setCtx(context);
+    const wrapper = canvas.parentNode;
+    if (wrapper instanceof Element) {
+      // css 크기 설정
+      const widthSize = parseFloat(window.getComputedStyle(wrapper).width);
+      const heightSize = parseFloat(window.getComputedStyle(wrapper).height);
+      canvas.style.width = `${widthSize}px`;
+      canvas.style.height = `${heightSize}px`;
+
+      // canvas 크기 설정
+      const dpr = window.devicePixelRatio;
+      canvas.width = Math.floor(widthSize * dpr);
+      canvas.height = Math.floor(heightSize * dpr);
+
+      // 렌더링 컨텍스트 스케일링
+      context.scale(dpr, dpr);
     }
   };
 
@@ -138,14 +134,22 @@ const Canvas = () => {
     }
     setPaths([...paths.slice(0, paths.length - 1), lastPath]); //add new point to the last path
   };
-  const redraw = () => {
+  const clearCanvas = () => {
+    const canvas = canvasRef.current;
+    const ctx = canvas?.getContext("2d");
+    if (canvas && ctx) {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = "#ffffff";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+    }
+  };
+  const drawPaths = () => {
     if (!canvasRef.current) return;
     const ctx = canvasRef.current.getContext("2d");
     //current canvas size
     const width = parseInt(canvasRef.current.style.width);
     const height = parseInt(canvasRef.current.style.height);
     if (!ctx) return;
-    ctx.clearRect(0, 0, width, height);
     ctx.lineJoin = "round";
     ctx.lineCap = "round";
     ctx.globalAlpha = 1;
@@ -177,9 +181,7 @@ const Canvas = () => {
     if (canvas && ctx) {
       setPaths([]); // Clear the paths
       setUndonePaths([]); // Clear the undone paths
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = "#ffffff";
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      clearCanvas();
     }
   };
   const handleSave = () => {
