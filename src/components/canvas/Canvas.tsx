@@ -213,7 +213,7 @@ const Canvas = () => {
 
   const touchStart = (e: React.TouchEvent<HTMLCanvasElement>) => {
     if (!canvasRef.current) return;
-
+    e.preventDefault(); // Prevent scrolling when touching the canvas
     setIsOpen(false);
     const rect = canvasRef.current.getBoundingClientRect();
     const currentProps = eraseMode
