@@ -336,7 +336,13 @@ const Canvas = () => {
           <span
             className={`rounded-md w-6 h-6 inline-block align-middle`}
             style={{ backgroundColor: color }}
-            onClick={() => {
+            onMouseDown={(e) => {
+              e.preventDefault();
+              colorRef.current?.click();
+              setEraseMode(false);
+            }}
+            onTouchStart={(e) => {
+              e.preventDefault();
               colorRef.current?.click();
               setEraseMode(false);
             }}
