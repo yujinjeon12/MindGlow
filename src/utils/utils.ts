@@ -1,7 +1,10 @@
-export const debounce = (callback: Function, delay: number) => {
-  let timer: NodeJS.Timeout;
+export const debounce = <T extends (...args: any[]) => void>(
+  callback: T,
+  delay: number
+) => {
+  let timer: ReturnType<typeof setTimeout>;
 
-  return (...args: any[]) => {
+  return (...args: Parameters<T>): void => {
     clearTimeout(timer);
     timer = setTimeout(() => callback(...args), delay);
   };
