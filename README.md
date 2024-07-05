@@ -1,8 +1,13 @@
 
 ## MindGlow
+MindGlow is an AI-based emotion analysis diary web application.
+
+## System Requirements
+- Node.js 18.17 or later.
+
+- macOS, Windows (including WSL), and Linux are supported.
 
 ## Installation
-
 1. Clone the repository:
 ````bash
 git clone https://github.com/yujinjeon12/MindGlow.git
@@ -13,10 +18,11 @@ npm install
 ````
 
 3. Set up environment variables:
-Create a .env file in the root directory of the project and set the necessary environment variables.
+
+- Create a .env file in the root directory of the project and set the necessary environment variables.
 
 
-5. Start the development server:
+4. Start the development server:
 ````bash
 npm run dev
 ````
