@@ -273,7 +273,7 @@ const Canvas = () => {
         오늘의 감정을 그림으로 표현해보세요.
       </h1>
       <div
-        className="h-5/6 flex flex-wrap justify-center items-center px-4 py-4 mx-2 md:mx-0 rounded-md bg-yellow"
+        className="h-4/6 flex flex-wrap justify-center items-center px-4 py-4 mx-2 md:mx-0 rounded-md bg-yellow"
         onClick={handleOverlay}
       >
         <div className="w-full h-full bg-white rounded-t-lg shadow-2xl">
