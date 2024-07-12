@@ -1,8 +1,6 @@
 "use client";
 import { Inter } from "next/font/google";
 import "@/styles/globals.css";
-import { store } from "@/store/store";
-import { Provider } from "react-redux";
 import { SessionProvider } from "next-auth/react";
 import { ThemeProvider } from "next-themes";
 import { Viewport } from "next";
@@ -31,7 +29,7 @@ export default function RootLayout({
             attribute="class"
             disableTransitionOnChange
           >
-            <Provider store={store}>{children}</Provider>
+            {children}
           </ThemeProvider>
         </SessionProvider>
       </body>
