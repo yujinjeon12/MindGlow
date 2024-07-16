@@ -7,33 +7,38 @@ import NextImage from "next/image";
 import { debounce } from "@/utils/utils";
 import { ImBin } from "react-icons/im";
 import ModalBase from "../modal/ModalBase";
-
-type lineProps = {
-  color: string;
-  lineWidth: number;
-  lineAlpha: number;
-};
-type Point = {
-  x: number;
-  y: number;
-  canvasWidth: number;
-  canvasHeight: number;
-  lineProps?: lineProps;
-};
-type Path = Point[];
+import { useSelector, useDispatch } from "react-redux";
+import { Path } from "@/lib/features/canvas/CanvasSlice";
+import {
+  startDrawing,
+  draw,
+  stopDrawing,
+  setLineWidth,
+  setLineAlpha,
+  setColor,
+  setEraseMode,
+  clearPaths,
+  undo,
+  redo,
+  setModalOpen
+} from "@/lib/features/canvas/CanvasSlice";
+import { RootState } from "@/lib/store";
 
 const Canvas = () => {
-  const [paths, setPaths] = useState<Path[]>([]);
-  const [undonePaths, setUndonePaths] = useState<Path[]>([]);
+  const dispatch = useDispatch();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const colorRef = useRef<HTMLInputElement>(null);
+  const {
+    paths,
+    undonePaths,
+    lineWidth,
+    lineAlpha,
+    color,
+    isDrawing,
+    eraseMode,
+    modalIsOpen,
+  } = useSelector((state: RootState) => state.CanvasReducer);
   const [ctx, setCtx] = useState<CanvasRenderingContext2D | null>(null);
-  const [lineWidth, setLineWidth] = useState<number>(3);
-  const [lineAlpha, setLineAlpha] = useState<number>(10);
-  const [isDrawing, setIsDrawing] = useState<boolean>(false);
-  const [color, setColor] = useState<string>("#222222"); // default color
-  const [eraseMode, setEraseMode] = useState<boolean>(false); // default erase mode
-  const [modalIsOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     const canvas = canvasRef.current; // canvas element
@@ -80,12 +85,12 @@ const Canvas = () => {
   };
 
   const mouseUp = (e: React.MouseEvent<HTMLCanvasElement, MouseEvent>) => {
-    setIsDrawing(false);
+    dispatch(stopDrawing());
   };
   const mouseDown = (e: React.MouseEvent<HTMLCanvasElement, MouseEvent>) => {
     if (!canvasRef.current) return;
 
-    setIsOpen(false);
+    dispatch(setModalOpen(false));
     const rect = canvasRef.current.getBoundingClientRect();
     const currentProps = eraseMode
       ? {
@@ -99,19 +104,15 @@ const Canvas = () => {
           lineAlpha: lineAlpha / 10,
         };
     //add new path
-    setPaths([
-      ...paths,
-      [
-        {
-          x: e.clientX - rect.left,
-          y: e.clientY - rect.top,
-          canvasWidth: parseInt(canvasRef.current.style.width),
-          canvasHeight: parseInt(canvasRef.current.style.height),
-          lineProps: currentProps,
-        },
-      ],
-    ]);
-    setIsDrawing(true);
+    dispatch(
+      startDrawing({ 
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top,
+        canvasWidth: parseInt(canvasRef.current.style.width),
+        canvasHeight: parseInt(canvasRef.current.style.height),
+        lineProps: currentProps
+      })
+    );
   };
   const mouseMove = (e: React.MouseEvent<HTMLCanvasElement, MouseEvent>) => {
     if (!canvasRef.current || !isDrawing) return;
@@ -121,18 +122,12 @@ const Canvas = () => {
 
     const { clientX, clientY } = e;
     const rect = canvasRef.current.getBoundingClientRect();
-    const offsetX = clientX - rect.left;
-    const offsetY = clientY - rect.top;
-    const lastPath = paths[paths.length - 1];
-    if (lastPath) {
-      lastPath.push({
-        x: offsetX,
-        y: offsetY,
-        canvasWidth: parseInt(canvasRef.current.style.width),
-        canvasHeight: parseInt(canvasRef.current.style.height),
-      });
-    }
-    setPaths([...paths.slice(0, paths.length - 1), lastPath]); //add new point to the last path
+    dispatch(draw({
+      x: clientX - rect.left,
+      y: clientY - rect.top,
+      canvasWidth: parseInt(canvasRef.current.style.width),
+      canvasHeight: parseInt(canvasRef.current.style.height),
+    }));
   };
   const clearCanvas = () => {
     const canvas = canvasRef.current;
@@ -155,7 +150,7 @@ const Canvas = () => {
     ctx.globalAlpha = 1;
     ctx.fillStyle = "#ffffff";
     ctx.fillRect(0, 0, width, height);
-    paths.forEach((path) => {
+    paths.forEach((path: Path) => {
       path.forEach((point) => {
         const scaledX = (width / point.canvasWidth) * point.x;
         const scaledY = (height / point.canvasHeight) * point.y;
@@ -173,14 +168,13 @@ const Canvas = () => {
     });
   };
   const erase = () => {
-    setEraseMode(true);
+    dispatch(setEraseMode(true));
   };
   const eraseAll = () => {
     const canvas = canvasRef.current;
     const ctx = canvas?.getContext("2d");
     if (canvas && ctx) {
-      setPaths([]); // Clear the paths
-      setUndonePaths([]); // Clear the undone paths
+      dispatch(clearPaths()); // Clear the paths and undone paths
       clearCanvas();
     }
   };
@@ -193,28 +187,26 @@ const Canvas = () => {
 
   const handleLineWidth = (e: React.MouseEvent) => {
     e.stopPropagation();
-    setIsOpen(true);
+    dispatch(setModalOpen(true));
   };
   const handleOverlay = () => {
-    setIsOpen(false);
+    dispatch(setModalOpen(false));
   };
-  const undo = () => {
-    if (paths.length) {
-      setUndonePaths([...undonePaths, paths[paths.length - 1]]);
-      setPaths(paths.slice(0, paths.length - 1));
+  const handleUndo = () => {
+    if (paths.length > 0) {
+      dispatch(undo());
     }
   };
-  const redo = () => {
+  const handleRedo = () => {
     if (undonePaths.length) {
-      setPaths([...paths, undonePaths[undonePaths.length - 1]]);
-      setUndonePaths(undonePaths.slice(0, undonePaths.length - 1));
+      dispatch(redo());
     }
   };
 
   const touchStart = (e: React.TouchEvent<HTMLCanvasElement>) => {
     if (!canvasRef.current) return;
     e.preventDefault(); // Prevent scrolling when touching the canvas
-    setIsOpen(false);
+    dispatch(setModalOpen(false));
     const rect = canvasRef.current.getBoundingClientRect();
     const currentProps = eraseMode
       ? {
@@ -228,19 +220,15 @@ const Canvas = () => {
           lineAlpha: lineAlpha / 10,
         };
     //add new path
-    setPaths([
-      ...paths,
-      [
-        {
-          x: e.touches[0].clientX - rect.left,
-          y: e.touches[0].clientY - rect.top,
-          canvasWidth: parseInt(canvasRef.current.style.width),
-          canvasHeight: parseInt(canvasRef.current.style.height),
-          lineProps: currentProps,
-        },
-      ],
-    ]);
-    setIsDrawing(true);
+    dispatch(
+      startDrawing({
+        x: e.touches[0].clientX - rect.left,
+        y: e.touches[0].clientY - rect.top,
+        canvasWidth: parseInt(canvasRef.current.style.width),
+        canvasHeight: parseInt(canvasRef.current.style.height),
+        lineProps: currentProps
+      })
+    );
   };
   const touchMove = (e: React.TouchEvent<HTMLCanvasElement>) => {
     if (!canvasRef.current || !isDrawing) return;
@@ -248,23 +236,19 @@ const Canvas = () => {
     const ctx = canvasRef.current.getContext("2d");
     if (!ctx) return; // Add null check for ctx
 
-    const { clientX, clientY } = e.touches[0];
-    const rect = canvasRef.current.getBoundingClientRect();
-    const offsetX = clientX - rect.left;
-    const offsetY = clientY - rect.top;
-    const lastPath = paths[paths.length - 1];
-    if (lastPath) {
-      lastPath.push({
-        x: offsetX,
-        y: offsetY,
-        canvasWidth: parseInt(canvasRef.current.style.width),
-        canvasHeight: parseInt(canvasRef.current.style.height),
-      });
-    }
-    setPaths([...paths.slice(0, paths.length - 1), lastPath]); //add new point to the last path
+    const rect = canvasRef.current?.getBoundingClientRect();
+    const touch = e.touches[0];
+      dispatch(
+        draw({
+          x: touch.clientX - rect.left,
+          y: touch.clientY - rect.top,
+          canvasWidth: parseInt(canvasRef.current?.style.width || "0"),
+          canvasHeight: parseInt(canvasRef.current?.style.height || "0"),
+        })
+      );
   };
   const touchEnd = (e: React.TouchEvent<HTMLCanvasElement>) => {
-    setIsDrawing(false);
+    dispatch(stopDrawing());
   };
 
   return (
@@ -303,7 +287,7 @@ const Canvas = () => {
                   defaultValue={lineWidth}
                   onChange={(e) => {
                     if (ctx) {
-                      setLineWidth(Number(e.target.value));
+                      dispatch(setLineWidth(Number(e.target.value)));
                     }
                   }}
                 />
@@ -315,7 +299,7 @@ const Canvas = () => {
                   defaultValue={lineAlpha}
                   onChange={(e) => {
                     if (ctx) {
-                      setLineAlpha(Number(e.target.value));
+                      dispatch(setLineAlpha(Number(e.target.value)));
                     }
                   }}
                 />
@@ -330,7 +314,7 @@ const Canvas = () => {
             value="#fefefe"
             className={`inline-block w-0 invisible caret-transparent`}
             onChange={(e) => {
-              setColor(e.target.value);
+              dispatch(setColor(e.target.value));
             }}
           ></input>
           <span
@@ -339,12 +323,12 @@ const Canvas = () => {
             onMouseDown={(e) => {
               e.preventDefault();
               colorRef.current?.click();
-              setEraseMode(false);
+              dispatch(setEraseMode(false));
             }}
             onTouchStart={(e) => {
               e.preventDefault();
               colorRef.current?.click();
-              setEraseMode(false);
+              dispatch(setEraseMode(false));
             }}
           ></span>
           <NextImage
@@ -362,12 +346,12 @@ const Canvas = () => {
           <IoMdReturnLeft
             className="w-6 h-6 inline-block cursor-pointer align-middle mr-4 bg-gray rounded-full p-1"
             color={paths.length == 0 ? "white" : "black"}
-            onClick={undo}
+            onClick={handleUndo}
           />
           <IoMdReturnRight
             className="w-6 h-6 inline-block cursor-pointer align-middle mr-4 bg-gray rounded-full p-1"
             color={undonePaths.length == 0 ? "white" : "black"}
-            onClick={redo}
+            onClick={handleRedo}
           />
           <ImBin
             className="w-6 h-6 inline-block cursor-pointer align-middle mr-4 text-dark-gray"

@@ -1,8 +1,11 @@
-import { configureStore } from '@reduxjs/toolkit'
+import { configureStore } from '@reduxjs/toolkit';
+import CanvasReducer from './features/canvas/CanvasSlice';
 
 export const makeStore = () => {
   return configureStore({
-    reducer: {},
+    reducer: {
+      CanvasReducer
+    },
   })
 }
 
