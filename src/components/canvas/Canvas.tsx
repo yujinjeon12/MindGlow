@@ -203,7 +203,7 @@ const Canvas = () => {
   };
 
   return (
-    <section className="w-full h-full pb-8">
+    <section className="w-full h-full pb-8 touch-none">
       <h1 className="font-bold text-left my-4 mx-2 md:mx-0">
         오늘의 감정을 그림으로 표현해보세요.
       </h1>
@@ -213,7 +213,7 @@ const Canvas = () => {
       >
         <div className="w-full h-full bg-white rounded-t-lg shadow-2xl">
           <canvas
-            className={`block ${eraseMode ? "cursor-eraser" : "cursor-pen"} rounded-md`}
+            className={`block ${eraseMode ? "cursor-eraser" : "cursor-pen"} rounded-md touch-none`}
             id="canvas"
             ref={canvasRef}
             onMouseUp={mouseUp}
