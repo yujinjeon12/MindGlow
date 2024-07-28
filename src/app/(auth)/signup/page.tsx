@@ -42,7 +42,6 @@ const Signup = () => {
         toast.error(data.message);
       }
     } catch (e) {
-      console.log("e", e);
     }
   };
   return (
