@@ -1,4 +1,5 @@
-"use client";
+"use client"
+
 import { useRef } from 'react'
 import { Inter } from "next/font/google";
 import "@/styles/globals.css";
@@ -20,8 +21,10 @@ export const viewport: Viewport = {
 };
 
 export default function RootLayout({
+  modal,
   children,
 }: Readonly<{
+  modal: React.ReactNode,
   children: React.ReactNode;
 }>) {
   const storeRef = useRef<AppStore>()
@@ -38,7 +41,12 @@ export default function RootLayout({
               attribute="class"
               disableTransitionOnChange
             >
-              {children}
+              <div className="sticky top-0 bg-white dark:bg-black">
+                <div className="container h-screen overflow-hidden mx-auto text-center max-w-sm md:max-w-3xl lg:max-w-4xl">
+                  {modal}
+                  {children}
+                </div>
+              </div>
             </ThemeProvider>
           </SessionProvider>
         </Provider>

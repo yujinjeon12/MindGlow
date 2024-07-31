@@ -22,13 +22,9 @@ const Home = async () => {
 
   return (
     <>
-      <div className="sticky top-0 bg-white dark:bg-black">
-        <div className="container h-screen overflow-hidden mx-auto text-center max-w-sm md:max-w-3xl lg:max-w-4xl">
-          <Header />
-          <InnerHeader/>
-          <Canvas />
-        </div>
-      </div>
+      <Header />
+      <InnerHeader/>
+      <Canvas />
     </>
   );
 };

@@ -5,7 +5,7 @@ import { IoMdReturnLeft, IoMdReturnRight } from "react-icons/io";
 import Button from "../button/Button";
 import NextImage from "next/image";
 import { ImBin } from "react-icons/im";
-import ModalBase from "../modal/ModalBase";
+import Popover from "../popover/Popover";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/lib/store";
 import {
@@ -18,6 +18,7 @@ import {
   undo,
   redo,
 } from "@/lib/features/canvas/CanvasSlice";
+import Link from "next/link";
 
 type CanvasComponentProps = {
   canvasRef: MutableRefObject<HTMLCanvasElement | null>;
@@ -55,10 +56,10 @@ const CanvasHandler = ({ canvasRef }: CanvasComponentProps) => {
     }
   };
   const handleSave = () => {
-    const link = document.createElement("a");
-    link.download = "draw-emotion.png";
-    link.href = canvasRef.current?.toDataURL() ?? "";
-    link.click();
+    // const link = document.createElement("a");
+    // link.download = "draw-emotion.png";
+    // link.href = canvasRef.current?.toDataURL() ?? "";
+    // link.click();
   };
   const handleLineWidth = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -77,7 +78,7 @@ const CanvasHandler = ({ canvasRef }: CanvasComponentProps) => {
     return (
         <div className="flex h-fit relative items-center z-0 bottom-16 bg-light-gray p-2 rounded-md">
           {modalIsOpen && (
-            <ModalBase customStyles="absolute -top-14 left-10 p-4">
+            <Popover customStyles="absolute -top-14 left-10 p-4">
               <div className="flex flex-col items-start">
                 <span className="text-lg font-bold">선 두께 {lineWidth}</span>
                 <input
@@ -104,7 +105,7 @@ const CanvasHandler = ({ canvasRef }: CanvasComponentProps) => {
                   }}
                 />
               </div>
-            </ModalBase>
+            </Popover>
           )}
           <input
             ref={colorRef}
@@ -157,13 +158,15 @@ const CanvasHandler = ({ canvasRef }: CanvasComponentProps) => {
             className="w-6 h-6 inline-block cursor-pointer align-middle mr-4 text-dark-gray"
             onClick={eraseAll}
           />
-          <Button
-            onClick={handleSave}
-            bgColor="bg-pink"
-            textColor="text-white"
-            value="SAVE"
-            option="w-14 h-8 rounded-md text-sm"
-          />
+          <Link href='/inputModal'>
+            <Button
+              onClick={handleSave}
+              bgColor="bg-pink"
+              textColor="text-white"
+              value="완료"
+              option="w-14 h-8 rounded-md text-sm"
+            />
+          </Link>
         </div>
     );
 };

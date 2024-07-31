@@ -1,21 +1,43 @@
-import React, { useState } from "react";
+import React from "react";
+import { useRouter } from 'next/navigation'
+import { IoIosCloseCircleOutline } from "react-icons/io";
 
 type ModalBaseProps = {
+  title: string;
   children: React.ReactNode;
   customStyles?: string;
 };
 
-const ModalBase = ({ children, customStyles }: ModalBaseProps) => {
+const ModalBase = ({ title, children, customStyles }: ModalBaseProps) => {
+  const router = useRouter();
   const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
   };
-
+  const closeModal = () => {
+    router.back();
+  }
   return (
-    <div
-      className={`bg-white text-black z-10 shadow-lg rounded-md ${customStyles}`}
-      onClick={handleClick}
-    >
-      {children}
+    <div className="fixed top-0 left-0 w-full h-full z-10 bg-black bg-opacity-70">
+      <div
+        className={`fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-10/12 sm:w-3/4 md:w-1/2 p-6 z-100 bg-white text-black shadow-lg rounded-md opacity-100 ${customStyles}`}
+        onClick={handleClick}
+      >
+        {/* 모달 헤더 */}
+        <div className="flex justify-between items-center pb-4 border-b">
+          <h2 className="text-xl font-semibold">{title}</h2>
+          <button
+            onClick={closeModal}
+            aria-label="Close Modal"
+            className="rounded-full text-gray-800 hover:text-gray"
+          >
+            <IoIosCloseCircleOutline size={24}/>
+          </button>
+        </div>
+        {/* 모달 본문 */}
+        <div className="text-left pt-4">
+          {children}
+        </div>
+      </div>
     </div>
   );
 };
