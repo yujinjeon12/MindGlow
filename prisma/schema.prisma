@@ -10,7 +10,7 @@ generator client {
 
 model Account {
   id                 Int  @id @default(autoincrement())
-  userId             Int
+  userId             String
   type               String
   provider           String
   providerAccountId  String
@@ -30,18 +30,19 @@ model Account {
 model Session {
   id           Int   @id @default(autoincrement())
   sessionToken String   @unique
-  userId       Int
+  userId       String
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id])
 }
 
 model User {
-  id            Int    @id @default(autoincrement())
+  id            String    @id @default(uuid())
   name          String?
   email         String?   @unique
   emailVerified DateTime?
   image         String?
   password      String?
+  createdAt     DateTime @default(now())
   accounts      Account[]
   sessions      Session[]
   diaries       Diary[]
@@ -62,6 +63,6 @@ model Diary{
   content   String
   imageUrl  String?  // 이미지를 저장할 URL
   createdAt DateTime @default(now())
-  userId    Int
+  userId    String
   user      User     @relation(fields: [userId], references: [id])
 }

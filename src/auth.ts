@@ -38,7 +38,23 @@ export const {
     }),
     Google,
   ],
+  secret: process.env.AUTH_SECRET, // 환경 변수에서 비밀키 가져오기
   session: {
     strategy: "jwt",
+  },
+  callbacks: {
+    //세션에 user id 값 세팅
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = user.id;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      if (token && token.sub) {
+        session.user.id = token.sub;
+      }
+      return session;
+    },
   },
 });

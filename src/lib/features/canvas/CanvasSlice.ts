@@ -25,6 +25,7 @@ interface CanvasState {
   isDrawing: boolean;
   eraseMode: boolean;
   modalIsOpen: boolean;
+  imageData: string | null;
 }
 
 const initialState: CanvasState = {
@@ -35,7 +36,8 @@ const initialState: CanvasState = {
   color: '#222222',
   isDrawing: false,
   eraseMode: false,
-  modalIsOpen: false
+  modalIsOpen: false,
+  imageData: null
 };
 
 const canvasSlice = createSlice({
@@ -87,6 +89,12 @@ const canvasSlice = createSlice({
     },
     setModalOpen(state, action: PayloadAction<boolean>) {
         state.modalIsOpen = action.payload;
+    },
+    setImageData(state, action: PayloadAction<string>) {
+      state.imageData = action.payload;
+    },
+    clearImageData(state) {
+      state.imageData = null;
     }
   },
 });
@@ -102,7 +110,9 @@ export const {
   clearPaths,
   undo,
   redo,
-  setModalOpen
+  setModalOpen,
+  setImageData,
+  clearImageData
 } = canvasSlice.actions;
 
 export default canvasSlice.reducer;

@@ -1,16 +1,17 @@
 "use client";
-import React, { useEffect, useRef } from "react";
-import { debounce } from "@/utils/utils";
+
+import React, { useEffect, useRef, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Path } from "@/lib/features/canvas/CanvasSlice";
 import {
   startDrawing,
   draw,
   stopDrawing,
-  setModalOpen
+  setModalOpen,
+  Path
 } from "@/lib/features/canvas/CanvasSlice";
 import { RootState } from "@/lib/store";
 import CanvasHandler from "./CanvasHandler";
+import { debounce } from "@/utils/utils";
 
 const Canvas = () => {
   const dispatch = useDispatch();

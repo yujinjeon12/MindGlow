@@ -1,12 +1,14 @@
 "use client";
+
 import React, { useRef, MutableRefObject } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import NextImage from "next/image";
+import { useRouter } from "next/navigation";
 import { BsEraserFill } from "react-icons/bs";
+import { ImBin } from "react-icons/im";
 import { IoMdReturnLeft, IoMdReturnRight } from "react-icons/io";
 import Button from "../button/Button";
-import NextImage from "next/image";
-import { ImBin } from "react-icons/im";
 import Popover from "../popover/Popover";
-import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/lib/store";
 import {
   setLineWidth,
@@ -17,13 +19,14 @@ import {
   setModalOpen,
   undo,
   redo,
+  setImageData,
 } from "@/lib/features/canvas/CanvasSlice";
-import Link from "next/link";
 
 type CanvasComponentProps = {
   canvasRef: MutableRefObject<HTMLCanvasElement | null>;
 }
 const CanvasHandler = ({ canvasRef }: CanvasComponentProps) => {
+  const router = useRouter();
   const dispatch = useDispatch();
   const colorRef = useRef<HTMLInputElement>(null);
   const {
@@ -55,11 +58,12 @@ const CanvasHandler = ({ canvasRef }: CanvasComponentProps) => {
       clearCanvas();
     }
   };
-  const handleSave = () => {
-    // const link = document.createElement("a");
-    // link.download = "draw-emotion.png";
-    // link.href = canvasRef.current?.toDataURL() ?? "";
-    // link.click();
+  const handleComplete = () => {
+    if(canvasRef.current){
+      const image = canvasRef.current.toDataURL('image/png');
+      dispatch(setImageData(image));
+      router.push('/inputModal');
+    }
   };
   const handleLineWidth = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -158,15 +162,13 @@ const CanvasHandler = ({ canvasRef }: CanvasComponentProps) => {
             className="w-6 h-6 inline-block cursor-pointer align-middle mr-4 text-dark-gray"
             onClick={eraseAll}
           />
-          <Link href='/inputModal'>
-            <Button
-              onClick={handleSave}
-              bgColor="bg-pink"
-              textColor="text-white"
-              value="완료"
-              option="w-14 h-8 rounded-md text-sm"
-            />
-          </Link>
+          <Button
+            onClick={handleComplete}
+            bgColor="bg-pink"
+            textColor="text-white"
+            value="완료"
+            option="w-14 h-8 rounded-md text-sm"
+          />
         </div>
     );
 };
