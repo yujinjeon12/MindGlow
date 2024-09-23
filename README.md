@@ -1,6 +1,6 @@
 
 ## MindGlow
-MindGlow is an AI-based emotion analysis diary web application.
+An emotions diary web application that allows users to record and reflect on their daily emotions.
 
 ## System Requirements
 - Node.js 18.17 or later.
