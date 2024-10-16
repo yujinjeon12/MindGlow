@@ -8,7 +8,7 @@ import {
   description,
   favicon,
 } from "@/components/common/shared-metadata";
-import InnerHeader from "@/components/header/InnerHeader";
+import MobileHeader from "@/components/header/MobileHeader";
 import { auth } from "@/auth";
 
 export const metadata: Metadata = {
@@ -23,7 +23,7 @@ const Home = async () => {
   return (
     <>
       <Header />
-      <InnerHeader/>
+      <MobileHeader/>
       <Canvas />
     </>
   );
