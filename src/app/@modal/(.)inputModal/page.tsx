@@ -36,7 +36,7 @@ const InputModal = () => {
       const { data } = await axios.post('/api/uploadImage', { image: imageData });
       const imageUrl = data.url;
 
-      //입력 데이터와 함께 DB에 저장
+      //그림 이미지를 입력 데이터와 함께 DB에 저장
       await axios.post('/api/saveDiary', {
         title,
         weather,
@@ -44,11 +44,13 @@ const InputModal = () => {
         imageUrl
       });
 
+      alert('일기가 저장되었습니다!'); // 저장 완료 알림
       dispatch(clearImageData());
       dispatch(clearPaths()); //clear canvas
       router.back();
     }catch (error) {
-      console.log('Error:', error);
+      console.error('Error saving diary:', error);
+      alert('일기 저장 중 오류가 발생했습니다. 다시 시도해주세요.'); // 오류 발생 시 알림
     }
   }
   const handleCancel = () => {

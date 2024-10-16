@@ -47,7 +47,7 @@ const Login = () => {
     <>
       <ToastProvider />
       <section className="flex justify-center items-start h-full flex-wrap bg-white dark:bg-black">
-        <div className="flex flex-wrap p-8 md:p-12 mt-40 max-w-lg md:border border-light-gray dark:border-dark-gray rounded-md">
+        <div className="flex flex-wrap p-8 md:p-12 mt-20 max-w-lg md:border border-light-gray dark:border-dark-gray rounded-md">
           <Logo />
           <h1 className="w-full text-4xl font-bold mt-8 mb-14 text-black dark:text-white">
             로그인
