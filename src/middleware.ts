@@ -8,7 +8,7 @@ export async function middleware(req: NextRequest) {
   if (session && session.user?.email && path == "/login") {
     return NextResponse.redirect(`${process.env.NEXT_PUBLIC_BASE_URL}`);
   }
-  if (!session && (path == "/emotions" || path == "/")) {
+  if (!session && (path == "/write-emotion" || path == "/")) {
     return NextResponse.redirect(`${process.env.NEXT_PUBLIC_BASE_URL}/login`);
   }
 }

@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import React from "react";
-import Canvas from "@/components/canvas/Canvas";
 import Header from "@/components/header/Header";
 
 import {
@@ -8,7 +7,6 @@ import {
   description,
   favicon,
 } from "@/components/common/shared-metadata";
-import MobileHeader from "@/components/header/MobileHeader";
 import { auth } from "@/auth";
 
 export const metadata: Metadata = {
@@ -23,8 +21,7 @@ const Home = async () => {
   return (
     <>
       <Header />
-      <MobileHeader/>
-      <Canvas />
+      
     </>
   );
 };

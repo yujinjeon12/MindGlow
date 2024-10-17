@@ -59,7 +59,7 @@ const InputModal = () => {
   }
 
   return (
-    <ModalBase title='오늘의 일기'>
+    <ModalBase title='그림 완료! 이제 일기를 작성해보세요.'>
       <div className="space-y-4">
           {/* Date Picker */}
           <div>
@@ -125,7 +125,7 @@ const InputModal = () => {
               onClick={handleSave}
               className="bg-pink text-white px-4 py-2 rounded-md shadow-md hover:bg-blue-600 focus:outline-none"
             >
-              저장
+              등록
             </button>
           </div>
         </div>

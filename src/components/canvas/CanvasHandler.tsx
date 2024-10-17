@@ -166,7 +166,7 @@ const CanvasHandler = ({ canvasRef }: CanvasComponentProps) => {
             onClick={handleComplete}
             bgColor="bg-pink"
             textColor="text-white"
-            value="완료"
+            value="다음"
             option="w-14 h-8 rounded-md text-sm"
           />
         </div>

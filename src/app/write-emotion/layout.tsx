@@ -6,12 +6,12 @@ import {
 import "@/styles/globals.css";
 
 export const metadata = {
-  title: "감정모아보기",
+  title: "감정 일기 쓰기",
   description: description,
   icons: favicon,
 };
 
-export default function EmotionsLayout({
+export default function WriteEmotionLayout({
   children,
 }: {
   children: React.ReactNode;
