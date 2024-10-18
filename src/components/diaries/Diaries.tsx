@@ -26,7 +26,7 @@ const DiaryList = () => {
             {diaries?.map((diary) => (
                 <div
                     key={diary.id}
-                    className="flex flex-col items-center p-2 bg-light-gray rounded-sm shadow-sm"
+                    className="flex flex-col items-center p-2 bg-light-gray dark:bg-cool-gray rounded-sm shadow-sm"
                 >
                     <Image
                         src={diary.imageUrl || '/default-image.jpg'} // 기본 이미지 경로 설정
@@ -35,7 +35,7 @@ const DiaryList = () => {
                         height={300} // 실제 비율을 유지하기 위해 원래 비율의 높이 설정
                         className="rounded-sm"
                     />
-                    <p className="text-sm pt-2 text-left truncate w-full">{diary.weather}, {diary.title}</p> {/* 날씨와 제목 표시 */}
+                    <p className="text-sm pt-2 text-left truncate w-full text-dark-gray dark:text-white">{diary.weather}, {diary.title}</p> {/* 날씨와 제목 표시 */}
                 </div>
             ))}
         </div>

@@ -69,24 +69,30 @@ const InputModal = () => {
               onChange={(e) => setDate(e.target.value)}
               type="date"
               id="date"
-              className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+              className="mt-1 p-2 block w-full border-gray-300 rounded-md shadow-sm bg-light-gray dark:bg-cool-gray"
             />
           </div>
 
           {/* Weather Selector */}
           <div>
             <label htmlFor="weather" className="block text-gray-700">날씨</label>
-            <select
-              id="weather"
-              value={weather}
-              onChange={(e) => setWeather(e.target.value)}
-              className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-            >
-              {WeatherOptions.map(option => (
-                <option key={option} value={option}>{option}</option>
-              ))}
-            </select>
+            <div className="relative">
+              <select
+                id="weather"
+                value={weather}
+                onChange={(e) => setWeather(e.target.value)}
+                className="mt-1 p-2 block w-full border-gray-300 rounded-md shadow-sm appearance-none bg-light-gray dark:bg-cool-gray pr-8"
+              >
+                {WeatherOptions.map(option => (
+                  <option key={option} value={option}>{option}</option>
+                ))}
+              </select>
+              <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-sm">
+                ▾
+              </span>
+            </div>
           </div>
+
           {/* Title Input */}
           <div>
             <label htmlFor="title" className="block text-gray-700">제목</label>
@@ -95,7 +101,7 @@ const InputModal = () => {
               id="title"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="mt-1 p-2 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+              className="mt-1 p-2 block w-full border-gray-300 rounded-md shadow-sm bg-light-gray dark:bg-cool-gray"
               placeholder="제목을 입력해주세요."
             />
           </div>
@@ -107,7 +113,7 @@ const InputModal = () => {
               id="content"
               value={content}
               onChange={(e) => setContent(e.target.value)}
-              className="mt-1 p-2 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+              className="mt-1 p-2 block w-full border-gray-300 rounded-md shadow-sm bg-light-gray dark:bg-cool-gray"
               placeholder="내용을 입력해주세요."
               rows={4}
             />
@@ -117,7 +123,7 @@ const InputModal = () => {
           <div className="text-right">
             <button
               onClick={handleCancel}
-              className="bg-light-gray text-gray-700 mr-2 px-4 py-2 rounded-md shadow-md hover:bg-gray-400 focus:outline-none"
+              className="bg-light-gray text-dark-gray mr-2 px-4 py-2 rounded-md shadow-md hover:bg-gray-400 focus:outline-none"
             >
               취소
             </button>

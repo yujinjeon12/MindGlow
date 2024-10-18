@@ -102,7 +102,7 @@ const Login = () => {
             href="/signup"
             className="w-full"
           >
-            <p className="mt-12 underline text-black dark:text-white">
+            <p className="mt-12 underline text-black dark:text-white text-left">
               가입하기
             </p>
           </Link>
