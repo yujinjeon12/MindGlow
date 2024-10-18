@@ -9,13 +9,15 @@ export async function POST(req: NextRequest) {
     try {
         if(session?.user?.id) {
             const userId = session.user.id;
+            const nickname = session.user.name;
             const diary = await prisma.diary.create({
                 data: {
                     title,
                     weather,
                     content,
                     imageUrl,
-                    userId
+                    userId,
+                    nickname: nickname ?? '',
                 }
             })
         }else{

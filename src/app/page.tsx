@@ -8,6 +8,7 @@ import {
   favicon,
 } from "@/components/common/shared-metadata";
 import { auth } from "@/auth";
+import DiaryList from "@/components/diaries/Diaries";
 
 export const metadata: Metadata = {
   title: title,
@@ -21,7 +22,7 @@ const Home = async () => {
   return (
     <>
       <Header />
-      
+      <DiaryList />
     </>
   );
 };

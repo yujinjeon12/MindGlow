@@ -64,5 +64,6 @@ model Diary{
   imageUrl  String?  // 이미지를 저장할 URL
   createdAt DateTime @default(now())
   userId    String
+  nickname  String
   user      User     @relation(fields: [userId], references: [id])
 }
