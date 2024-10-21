@@ -1,9 +1,7 @@
 import {
-  title,
   description,
   favicon,
 } from "@/components/common/shared-metadata";
-import "@/styles/globals.css";
 
 export const metadata = {
   title: "감정 일기 쓰기",

@@ -14,10 +14,9 @@ const DiaryList = () => {
                 const data = await response.json();
                 setDiaries(data.diaries);
             } catch (error) {
-                console.error('Error fetching diaries:', error);
+                alert('일기를 불러오는 중 오류가 발생했습니다. 다시 시도해 주세요.');
             }
         };
-
         getDiaries();
     }, []);
 
@@ -34,6 +33,7 @@ const DiaryList = () => {
                         width={300} // 실제 비율을 유지하기 위해 원래 비율의 너비 설정
                         height={300} // 실제 비율을 유지하기 위해 원래 비율의 높이 설정
                         className="rounded-sm"
+                        priority
                     />
                     <p className="text-sm pt-2 text-left truncate w-full text-dark-gray dark:text-white">{diary.weather}, {diary.title}</p> {/* 날씨와 제목 표시 */}
                 </div>

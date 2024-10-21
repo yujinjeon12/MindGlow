@@ -23,6 +23,7 @@ const InputModal = () => {
   const imageData = useSelector((state: RootState) => state.CanvasReducer.imageData);
 
   // Local state for form fields
+  const [isLoading, setIsLoading] = useState(false);
   const [weather, setWeather] = useState(WeatherOptions[0]);
   // Calculate today's date and use it as initial state
   const today = new Date().toISOString().split('T')[0];
@@ -31,11 +32,13 @@ const InputModal = () => {
   const [content, setContent] = useState('');
 
   const handleSave = async () => {
+    if(isLoading) return; // 이미 로딩 중이면 함수 종료
+    setIsLoading(true); //로딩 시작
     try {
       //이미지 데이터를 서버에 업로드
       const { data } = await axios.post('/api/uploadImage', { image: imageData });
       const imageUrl = data.url;
-
+      
       //그림 이미지를 입력 데이터와 함께 DB에 저장
       await axios.post('/api/saveDiary', {
         title,
@@ -44,13 +47,14 @@ const InputModal = () => {
         imageUrl
       });
 
-      alert('일기가 저장되었습니다!'); // 저장 완료 알림
       dispatch(clearImageData());
       dispatch(clearPaths()); //clear canvas
-      router.back();
+      router.push('/');
+      alert('일기가 저장되었습니다!'); // 저장 완료 알림
     }catch (error) {
-      console.error('Error saving diary:', error);
       alert('일기 저장 중 오류가 발생했습니다. 다시 시도해주세요.'); // 오류 발생 시 알림
+    } finally {
+      setIsLoading(false); //로딩 끝
     }
   }
   const handleCancel = () => {
@@ -129,9 +133,9 @@ const InputModal = () => {
             </button>
             <button
               onClick={handleSave}
-              className="bg-pink text-white px-4 py-2 rounded-md shadow-md hover:bg-blue-600 focus:outline-none"
+              className={`text-white px-4 py-2 rounded-md shadow-md focus:outline-none bg-pink ${isLoading ? 'cursor-default opacity-50' : ''}`}
             >
-              등록
+              {isLoading ? '등록중...' : '등록'}
             </button>
           </div>
         </div>

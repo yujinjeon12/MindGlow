@@ -42,7 +42,7 @@ export default function RootLayout({
               disableTransitionOnChange
             >
               <div className="sticky top-0 bg-white dark:bg-black">
-                <div className="container h-screen overflow-x-hidden overflow-y-scroll mx-auto text-center max-w-sm md:max-w-3xl lg:max-w-4xl">
+                <div className="container h-screen mx-auto text-center max-w-sm md:max-w-3xl lg:max-w-4xl">
                   {modal}
                   {children}
                 </div>

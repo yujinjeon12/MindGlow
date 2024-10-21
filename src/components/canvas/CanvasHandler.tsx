@@ -58,7 +58,9 @@ const CanvasHandler = ({ canvasRef }: CanvasComponentProps) => {
       clearCanvas();
     }
   };
-  const handleComplete = () => {
+  const handleNext = () => {
+    // 그림 완성 시 이미지 데이터를 상태로만 저장하고, S3 업로드는 나중에 수행
+    // (글 작성 완료 시에만 업로드)
     if(canvasRef.current){
       const image = canvasRef.current.toDataURL('image/png');
       dispatch(setImageData(image));
@@ -163,7 +165,7 @@ const CanvasHandler = ({ canvasRef }: CanvasComponentProps) => {
             onClick={eraseAll}
           />
           <Button
-            onClick={handleComplete}
+            onClick={handleNext}
             bgColor="bg-pink"
             textColor="text-white"
             value="다음"
