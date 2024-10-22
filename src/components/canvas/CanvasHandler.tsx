@@ -51,9 +51,11 @@ const CanvasHandler = ({ canvasRef }: CanvasComponentProps) => {
     dispatch(setEraseMode(true));
   };
   const eraseAll = () => {
+    const shouldClear = window.confirm("정말로 캔버스를 초기화하시겠습니까?");
+
     const canvas = canvasRef.current;
     const ctx = canvas?.getContext("2d");
-    if (canvas && ctx) {
+    if (shouldClear && canvas && ctx) {
       dispatch(clearPaths()); // Clear the paths and undone paths
       clearCanvas();
     }
