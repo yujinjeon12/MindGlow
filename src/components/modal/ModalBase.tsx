@@ -6,16 +6,14 @@ type ModalBaseProps = {
   title: string;
   children: React.ReactNode;
   customStyles?: string;
+  closeModal: () => void;
 };
 
-const ModalBase = ({ title, children, customStyles }: ModalBaseProps) => {
+const ModalBase = ({ title, children, customStyles, closeModal }: ModalBaseProps) => {
   const router = useRouter();
   const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
   };
-  const closeModal = () => {
-    router.back();
-  }
   return (
     <div className="fixed top-0 left-0 w-full h-full z-10 bg-black bg-opacity-70">
       <div

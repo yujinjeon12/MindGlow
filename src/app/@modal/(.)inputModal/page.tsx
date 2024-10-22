@@ -61,9 +61,12 @@ const InputModal = () => {
     dispatch(clearImageData());
     router.back();
   }
+  const closeModal = () => {
+    router.back();
+  }
 
   return (
-    <ModalBase title='그림 완료! 이제 일기를 작성해보세요.'>
+    <ModalBase title='그림 완료! 이제 일기를 작성해보세요.' closeModal={closeModal}>
       <div className="space-y-4">
           {/* Date Picker */}
           <div>

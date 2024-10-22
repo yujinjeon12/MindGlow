@@ -7,7 +7,8 @@ export type ButtonProps = {
   children?: React.ReactNode;
 };
 export interface Diary {
-  id: string; // 일기 ID
+  id: number; // 일기 ID
+  userId: string;
   nickname: string
   title: string;
   weather: string;
