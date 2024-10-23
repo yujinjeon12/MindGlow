@@ -11,6 +11,7 @@ import TermsModal from "./TermsModal";
 const Signup = () => {
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isSigningUp, setIsSigningUp] = useState(false); // 회원가입 상태를 관리하는 변수
 
   const email = useInput("");
   const name = useInput("");
@@ -32,6 +33,8 @@ const Signup = () => {
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (isSigningUp) return; // 이미 회원가입 중이면 아무 동작도 하지 않음
+
     if (!termsAccepted) {
       alert("약관에 동의해 주시기 바랍니다.");
       return;
@@ -48,6 +51,9 @@ const Signup = () => {
       toast.error("비밀번호가 일치하지 않습니다.");
       return;
     }
+
+    setIsSigningUp(true); // 회원가입 중 상태로 변경
+
     try {
       const data = await fetch("/api/auth/signup", {
         method: "POST",
@@ -65,11 +71,13 @@ const Signup = () => {
         toast.success("회원가입이 완료되었습니다.");
         setTimeout(() => {
           router.push("/login");
-        }, 1500);
+        }, 500);
       } else {
         toast.error(data.message);
+        setIsSigningUp(false);
       }
     } catch (e) {
+      setIsSigningUp(false);
     }
   };
   return (
@@ -134,8 +142,9 @@ const Signup = () => {
             <Button
               bgColor="bg-pink"
               textColor="text-white"
-              value="회원가입"
+              value={isSigningUp ? "회원가입 처리 중..." : "회원가입"}
               option="w-full px-2 py-1 text-sm md:text-base h-11 rounded-sm"
+              disabled={isSigningUp} // 회원가입 중 버튼 비활성화
             />
           </form>
         </div>

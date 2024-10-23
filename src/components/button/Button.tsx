@@ -8,11 +8,15 @@ const Button = ({
   option,
   onClick,
   children,
+  disabled = false // 기본값 설정
 }: ButtonProps) => {
   return (
     <button
-      className={`${bgColor} ${textColor} font-bold ${option} align-middle`}
+      className={`font-bold align-middle ${bgColor} ${textColor} ${option} ${
+        disabled ? "opacity-50 cursor-not-allowed" : ""
+      }`} // 비활성화 시 불투명도, 커서 스타일 적용
       onClick={onClick}
+      disabled={disabled}
     >
       {children}
       {value}

@@ -5,6 +5,7 @@ export type ButtonProps = {
   option: string;
   onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
   children?: React.ReactNode;
+  disabled?: boolean;
 };
 export interface Diary {
   id: number; // 일기 ID

@@ -12,6 +12,8 @@ import ToastProvider from "@/components/toastProvider/ToastProvider";
 import Logo from "@/components/logo/Logo";
 
 const Login = () => {
+  const [isLoggingIn, setIsLoggingIn] = useState(false); // 로그인 상태를 관리하는 변수
+
   const router = useRouter();
   const email = useInput("");
   const password = useInput("");
@@ -23,6 +25,16 @@ const Login = () => {
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (isLoggingIn) return; // 이미 로그인 중이면 아무 동작도 하지 않음
+
+    // 이메일과 비밀번호가 빈 값이면 에러 메시지를 출력하고 함수 종료
+    if (!email.value.trim() || !password.value.trim()) {
+      toast.error("이메일과 비밀번호를 입력해주세요.");
+      return;
+    }
+
+    setIsLoggingIn(true); // 로그인 중 상태로 변경
+
     try {
       await signIn("credentials", {
         email: email.value,
@@ -33,17 +45,21 @@ const Login = () => {
           toast.error("아이디 또는 비밀번호가 일치하지 않습니다.");
           email.setValue("");
           password.setValue("");
+          setIsLoggingIn(false);
         } else {
           toast.success("로그인 되었습니다.");
           setTimeout(() => {
             router.push("/");
-          }, 1000);
+            setIsLoggingIn(false);
+          }, 500);
         }
       });
     } catch (e) {
       toast.error("다시 시도해주세요.");
+      setIsLoggingIn(false);
     }
   };
+
   return (
     <>
       <ToastProvider />
@@ -64,6 +80,7 @@ const Login = () => {
               value={email.value}
               onChange={email.onChangeValue}
               ref={inputRef}
+              disabled={isLoggingIn} // 로그인 중일 때 입력 필드 비활성화
             />
             <input
               type="password"
@@ -72,12 +89,14 @@ const Login = () => {
               autoComplete="on"
               value={password.value}
               onChange={password.onChangeValue}
+              disabled={isLoggingIn} // 로그인 중일 때 입력 필드 비활성화
             />
             <Button
               bgColor="bg-dark-gray"
               textColor="text-white"
-              value="로그인"
+              value={isLoggingIn ? "로그인 처리 중..." : "로그인"}
               option="w-full px-2 py-1 text-sm md:text-base h-11 bg-pink rounded-sm"
+              disabled={isLoggingIn} // 로그인 중일 때 버튼 비활성화
             />
           </form>
           <hr className="my-10 border border-light-gray w-full" />
