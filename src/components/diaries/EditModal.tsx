@@ -30,11 +30,10 @@ interface ModalProps {
   getDiaries:  () => void;
 }
 
-const DiaryModal = ({ modalOpen, setModalOpen, modalData, getDiaries }: ModalProps) => {
+const EditModal = ({ modalOpen, setModalOpen, modalData, getDiaries }: ModalProps) => {
   const router = useRouter();
   const dispatch = useDispatch();
 
-  const today = new Date().toISOString().split('T')[0];
   const [isLoading, setIsLoading] = useState(false);
   const [id, setId] = useState(modalData.idProps);
   const [weather, setWeather] = useState(modalData.weatherProps);
@@ -182,7 +181,7 @@ const DiaryModal = ({ modalOpen, setModalOpen, modalData, getDiaries }: ModalPro
               onClick={handleSave}
               className={`text-white px-4 py-2 rounded-md shadow-md focus:outline-none bg-pink ${isLoading ? 'cursor-default opacity-50' : ''}`}
             >
-              {isLoading ? '등록중...' : '등록'}
+              {isLoading ? '처리 중...' : '수정'}
             </button>
           </div>
         </div>
@@ -191,4 +190,4 @@ const DiaryModal = ({ modalOpen, setModalOpen, modalData, getDiaries }: ModalPro
   );
 };
 
-export default DiaryModal;
+export default EditModal;
