@@ -1,6 +1,6 @@
 
 ## MindGlow
-An emotions diary web application that allows users to record and reflect on their daily emotions.
+매일의 감정을 기록하고, 이를 다른 사람들과 공유할 수 있는 감정 일기 웹 애플리케이션입니다. 
 
 ## System Requirements
 - Node.js 18.17 or later.
