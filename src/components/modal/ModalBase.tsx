@@ -22,7 +22,7 @@ const ModalBase = ({ title, children, customStyles, closeModal }: ModalBaseProps
       >
         {/* 모달 헤더 */}
         <div className="flex justify-between items-center pb-4 border-b">
-          <h3 className="font-semibold text-left mr-4">{title}</h3>
+          <p className="text-lg font-bold text-left mr-4">{title}</p>
           <button
             onClick={closeModal}
             aria-label="Close Modal"

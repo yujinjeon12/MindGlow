@@ -57,13 +57,23 @@ model VerificationToken {
 }
 
 model Diary{
-  id        Int      @id @default(autoincrement())
-  title     String
-  weather   String
-  content   String
-  imageUrl  String?  // 이미지를 저장할 URL
-  createdAt DateTime @default(now())
-  userId    String
-  nickname  String
-  user      User     @relation(fields: [userId], references: [id])
+  id          Int         @id @default(autoincrement())
+  title       String
+  weather     String
+  content     String
+  imageUrl    String?     // 이미지를 저장할 URL
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt      // 수정 시 자동 갱신
+  userId      String
+  nickname    String
+  user        User        @relation(fields: [userId], references: [id])
+  aiResponse  AIResponse? @relation("DiaryToAIResponse") // AIResponse와의 관계 설정
+}
+
+model AIResponse {
+  id          Int         @id @default(autoincrement())
+  content     String
+  createdAt   DateTime    @default(now()) // 생성 시 자동 설정
+  diaryId     Int         @unique  // 1:1 관계를 위해 고유 설정
+  diary       Diary       @relation("DiaryToAIResponse", fields: [diaryId], references: [id])
 }
