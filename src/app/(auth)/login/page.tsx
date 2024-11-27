@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import Link from "next/link";
 import Image from "next/image";
+import { useSession } from "next-auth/react";
 
 import { useInput } from "@/hooks/useInput";
 import Button from "@/components/button/Button";
@@ -14,6 +15,8 @@ import Logo from "@/components/logo/Logo";
 const Login = () => {
   const [isLoggingIn, setIsLoggingIn] = useState(false); // 로그인 상태를 관리하는 변수
 
+  const { data: session } = useSession();
+
   const router = useRouter();
   const email = useInput("");
   const password = useInput("");
@@ -22,6 +25,13 @@ const Login = () => {
   useEffect(() => {
     inputRef.current?.focus();
   }, []);
+
+  useEffect(() => {
+    if(session) {
+      toast.success("로그인 되었습니다.");
+      router.refresh();
+    }
+  }, [session]);
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -46,12 +56,6 @@ const Login = () => {
           email.setValue("");
           password.setValue("");
           setIsLoggingIn(false);
-        } else {
-          toast.success("로그인 되었습니다.");
-          setTimeout(() => {
-            router.push("/");
-            setIsLoggingIn(false);
-          }, 500);
         }
       });
     } catch (e) {
