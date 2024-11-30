@@ -29,7 +29,8 @@ const Login = () => {
   useEffect(() => {
     if(session) {
       toast.success("로그인 되었습니다.");
-      router.refresh();
+      console.log('Session: ', session);
+      router.push('/');
     }
   }, [session]);
 
